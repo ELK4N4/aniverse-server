@@ -1,0 +1,78 @@
+.home-img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("/images/showcase-img.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    z-index: 0;
+}
+
+.home-img::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 0;
+}
+
+.showcase {
+    position: absolute;
+    width: 100%;
+    height: auto;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color: white;
+    text-align: center !important;
+    z-index: 1;
+}
+
+.showcase h1 {
+    display: block;
+    text-shadow: 0px 0px 10px #000000;
+    margin: 1rem 0;
+    font-size: 2.5rem;
+    text-align: center !important;
+}
+
+.showcase .showcase-logo {
+    font-family: logo-font;
+    font-weight: 100;
+    margin-right: .5rem;
+    font-size: 6rem;
+}
+
+.showcase h3 {
+    display: block;
+    margin: 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 100;
+    text-align: center !important;
+}
+
+.showcase-btn {
+    text-align: center !important;
+    margin: 1rem 0;
+    display: inline-block;
+    min-width: 25vw;
+    max-width: 30vw;
+    background-color: black;
+    font-size: 1.5rem;
+}
+
+@media (max-width: 800px) {
+    .showcase h3 {
+        font-size: 1.2rem;
+    }
+    
+    .showcase-btn {
+        max-width: 50vw;
+    }
+}
