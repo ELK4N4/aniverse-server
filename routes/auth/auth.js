@@ -8,20 +8,21 @@ const jwt = require('jsonwebtoken');
 //Login
 router.post('/login', async (req, res) => {
     const user = await User.findOne({email: req.body.email});
-
     //checking if the user exist
     if(!user) {
         return res.status(400).send('Email or password is wrong');
     }
     //checking if password is correct
     const validPassword = await bcrypt.compare(req.body.password, user.password);
+
     if(!validPassword) {
         return res.status(400).send('Email or password is wrong');
     }
 
     //Create and assign a TOKEN
     const token = jwt.sign({id: user._id, username: user.username}, process.env.TOKEN_SECRET, {expiresIn: '7d'});
-    res.status(200).json({token});;
+    
+    res.status(200).json({token, user});
 });
 
 //Register
@@ -50,7 +51,9 @@ router.post('/register', async (req, res) => {
     });
     try {
         const savedUser = await user.save();
-        return res.status(200).json(savedUser);
+        //Create and assign a TOKEN
+        const token = jwt.sign({id: user._id, username: user.username}, process.env.TOKEN_SECRET, {expiresIn: '7d'});
+        return res.status(200).json({token, user: savedUser});
     } catch(err) {
         return res.status(400).send(err);
     }

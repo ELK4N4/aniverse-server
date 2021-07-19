@@ -21,15 +21,19 @@ const userSchema = new mongoose.Schema({
         type: [String],
         default: null
     },
-    profile_image: {
+    banned: {
+        type: Date,
+        default: null
+    },
+    profileImage: {
         type: String,
         default: null
     },
-    created_at: {
+    createdAt: {
         type: Date,
         default: Date.now
     },
-    member_in_fansubs: [{
+    memberInFansubs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Fansub'
     }]

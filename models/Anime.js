@@ -12,11 +12,19 @@ const animeSchema = new mongoose.Schema({
             type: String,
         }
     },
-    added_by_user: {
+    type: {
+        type: String,
+        default: "series"
+    },
+    seasons: {
+        type: Number,
+        default: 1
+    },
+    addedByUser: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    episodes_number: {
+    episodesNumber: {
         type: Number
     },
     genre: {
@@ -25,7 +33,7 @@ const animeSchema = new mongoose.Schema({
     summary: {
         type: String
     },
-    created_at: {
+    createdAt: {
         type: Date,
         default: Date.now
     },
@@ -33,13 +41,9 @@ const animeSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    fansubs: [{ 
+    projects: [{ 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Fansub' 
-    }],
-    episodes: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Episode' 
+        ref: 'Project' 
     }]
 });
 

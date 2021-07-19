@@ -6,8 +6,21 @@ const Anime = require('../models/Anime');
 
 //GET all animes
 router.get('/', async (req, res) => {
-    const animes = await Anime.find();
+    let animes;
+    if (req.query.search) {
+        animes = await Anime.find({ 'name.hebrew' : new RegExp('^' + req.query.search + '$', "i")});
+    } else {
+        animes = await Anime.find();
+    }
     res.json(animes);
+});
+
+router.get('/:animeId', async (req, res) => {
+    const anime = await Anime.findById({_id: req.params.animeId});
+    if(!anime) {
+        return res.status(403).json({error: "Anime Not Found"});
+    }
+    res.json(anime);
 });
 
 //POST new animes
@@ -19,10 +32,10 @@ router.post('/', async (req, res) => {
             japanese: req.body.japaneseName,
         },
         summary: req.body.summary,
-        episodes_number: req.body.episodesNumber,
+        episodesNumber: req.body.episodesNumber,
         genre: req.body.genre,
         image: req.body.image,
-        added_by_user: req.user._id
+        addedByUser: req.user._id
     });
 
     const animeExist = await Anime.findOne({ 'name.hebrew': anime.name.hebrew });

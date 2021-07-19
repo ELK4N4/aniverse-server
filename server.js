@@ -14,10 +14,11 @@ const userParser = require('./middlewares/user-parser');
 
 /* Import Routers */
 const indexRouter = require('./routes/index.js');
-const fansubsRouter = require('./routes/fansubs/fansubs.js');
+const fansubsRouter = require('./routes/fansubs');
 const animesRouter = require('./routes/animes.js');
 const loginRouter = require('./routes/login.js');
 const authRouter = require('./routes/auth/auth.js');
+const userRouter = require('./routes/user');
 
 /* Constant Variables */
 const PORT = process.env.PORT || 5000;
@@ -33,6 +34,7 @@ app.set('layout', 'layouts/layout');
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
     next();
 });
 app.use(expressLayout);
@@ -62,9 +64,8 @@ app.use('/', indexRouter);
 // app.use('/team', teamRouter);
 app.use('/fansubs', fansubsRouter);
 app.use('/animes', animesRouter);
-// app.use('/user', userRouter);
+app.use('/user', userRouter);
 app.use('/login', loginRouter);
-// app.use('/register', registerRouter);
 app.use('/auth', authRouter);
 
 

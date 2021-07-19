@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const memberSchema = {
+const memberSchema = new mongoose.Schema({
     roles: {
         type: [String],
         default: ['member']
@@ -9,10 +9,10 @@ const memberSchema = {
         type: [String],
         default: ['']
     },
-    user_id: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
-};
+}, { _id : false });
 
 module.exports = memberSchema;

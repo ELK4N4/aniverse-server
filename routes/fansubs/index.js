@@ -23,9 +23,9 @@ router.post('/', verify, async (req, res) => {
     const fansub = new Fansub({
         name: req.body.name,
         image: req.body.image,
-        createdByUser: req.user.id,
+        createdByUser: req.user._id,
         members: [{
-            user: req.user.id,
+            userId: req.user._id,
             roles: ['member', 'admin'],
             permissions: [
                 'add-project',
@@ -47,9 +47,9 @@ router.post('/', verify, async (req, res) => {
     try {
         const savedFansub = await fansub.save();
 
-        const user = await User.findById({_id: req.user._id});
-        user.memberInFansubs.push(savedFansub._id);
-        await User.findByIdAndUpdate({_id: req.user._id}, user);
+        // const user = await User.findById({_id: req.user._id});
+        // user.memberInFansubs.push(savedFansub._id);
+        // await User.findByIdAndUpdate({_id: req.user._id}, user);
 
         res.status(201).json(savedFansub);
     } catch(err) {
@@ -91,7 +91,14 @@ router.put('/:fansubId', async (req, res) => {
 
 fansubRouter = require('./fansub');
 router.use('/:fansubId/', async (req, res, next) => {
-    const fansub = await Fansub.findById({_id: req.params.fansubId});
+    const fansub = await Fansub.findById({_id: req.params.fansubId}).populate({
+        path: 'projects',
+        model: 'Project',
+        populate: {
+          path: 'anime',
+          model: 'Anime',
+        },
+    });
     if(!fansub) {
         return res.status(400).json({error: 'Fansub Not Exist'})
     }

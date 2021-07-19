@@ -7,7 +7,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/home', (req, res) => {
-    console.log('sadf');
     res.redirect('/');
 });
 

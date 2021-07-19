@@ -1,9 +1,18 @@
 const mongoose = require('mongoose');
+const Project = require('./Project');
 
 const episodeSchema = new mongoose.Schema({
     anime: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Anime'
+    },
+    project: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project'
+    },
+    season: {
+        type: Number,
+        default: 1
     },
     name: {
         type: String,
@@ -24,15 +33,15 @@ const episodeSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    added_by_user: {
+    addedByUser: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    added_by_fansub: {
+    addedByFansub: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Fansub'
     },
-    created_at: {
+    createdAt: {
         type: Date,
         default: Date.now
     },
@@ -42,8 +51,24 @@ const episodeSchema = new mongoose.Schema({
     },
     comments: [{
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Comment' 
+        ref: 'EpisodeComment' 
     }]
+});
+
+episodeSchema.post("save", async function(savedDoc) {
+    try {
+        await Project.findByIdAndUpdate({_id: this.project}, { $push: { episodes: this._id } });
+    } catch(err) {
+        console.log({err});
+    }
+});
+
+episodeSchema.post("findOneAndRemove", async function(doc) {
+    try {
+        await Project.findByIdAndUpdate({_id: doc.project}, { $pull: { episodes: doc._id } });
+    } catch(err) {
+        console.log({err});
+    }
 });
 
 module.exports = mongoose.model('Episode', episodeSchema, 'Episodes');
