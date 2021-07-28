@@ -25,14 +25,14 @@ const fansubSchema = new mongoose.Schema({
     }],
 });
 
-fansubSchema.post("save", async function(savedDoc) {
-    try {
-        const user = await User.findById({_id: this.createdByUser});
-        user.memberInFansubs.push(this._id);
-        await user.save();
-    } catch(err) {
-        console.log({err});
-    }
-});
+// fansubSchema.post("save", async function(savedDoc) {
+//     try {
+//         const user = await User.findById({_id: this.createdByUser});
+//         user.memberInFansubs.push(this._id);
+//         await user.save();
+//     } catch(err) {
+//         console.log({err});
+//     }
+// });
 
 module.exports = mongoose.model('Fansub', fansubSchema, 'Fansubs');

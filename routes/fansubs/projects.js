@@ -9,7 +9,7 @@ const verify = require('../../middlewares/user-parser');
 
 //GET all projects details
 router.get('/', async (req, res) => {
-    const projects = await Project.find();
+    const projects = await Project.find({fansub: req.fansub._id}).populate('anime');
     if(!projects) {
         return res.status(400).send('Projects Not Exist');
     }
@@ -33,7 +33,7 @@ router.post('/', verify, async (req, res) => {
     if(!anime) {
         return res.status(400).send('Anime Not Exist');
     }
-    const projectExist = await Project.findOne({anime: anime._id});
+    const projectExist = await Project.findOne({anime: anime._id, fansub: req.fansub._id});
     
     if(projectExist) {
         return res.status(400).send('Project Exist');
@@ -47,6 +47,7 @@ router.post('/', verify, async (req, res) => {
 
     try {
         const savedProject = await project.save();
+        savedProject.anime = anime;
         res.status(201).json(savedProject);
     } catch(err) {
         res.status(400).send(err);

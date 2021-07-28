@@ -15,6 +15,7 @@ router.get('/', async (req, res) => {
     res.json(animes);
 });
 
+// GET anime
 router.get('/:animeId', async (req, res) => {
     const anime = await Anime.findById({_id: req.params.animeId});
     if(!anime) {
@@ -74,16 +75,6 @@ router.put('/:animeId', async (req, res) => {
 
     if(!anime){
         return res.status(404).send("Anime Not Found");
-    }
-
-    res.status(200).send(anime);
-});
-
-// GET anime
-router.get('/:animeId', async (req, res) => {
-    const anime = await Anime.findById({_id: req.params.animeId});
-    if(!anime) {
-        return res.status(403).json({error: "Anime Not Found"});
     }
 
     res.status(200).send(anime);

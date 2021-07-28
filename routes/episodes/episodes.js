@@ -9,18 +9,19 @@ const verify = require('../../middlewares/user-parser');
 
 //GET all episodes
 router.get('/', async (req, res) => {
-    const episodes = await Episode.find();
+    const episodes = await Episode.find({anime: req.anime._id});
     res.json(episodes);
 });
 
 // GET episode
 router.get('/:episodeId', async (req, res) => {
-    const epidose = await Episode.findById({_id: req.params.episodeId});
-    if(!epidose) {
+    const episode = await Episode.findById({_id: req.params.episodeId});
+    if(!episode) {
         return res.status(403).json({error: "Episode Not Found"});
     }
 
-    res.status(200).send(epidose);
+    episode.anime = req.anime;
+    res.status(200).send(episode);
 });
 
 //POST new episodes

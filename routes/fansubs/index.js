@@ -26,30 +26,23 @@ router.post('/', verify, async (req, res) => {
         createdByUser: req.user._id,
         members: [{
             userId: req.user._id,
-            roles: ['member', 'admin'],
+            roles: ['admin'],
             permissions: [
-                'add-project',
-                'delete-project',
-                'update-project',
-                'add-episode',
-                'delete-episode',
-                'update-episode',
-                'add-members',
-                'remove-members',
-                'edit-roles',
-                'edit-fansub-name',
-                'edit-fansub-image',
-                'delete-fansub'
+                'projects',
+                'fansub',
+                'episodes',
+                'members',
             ]
         }]
     });
 
     try {
         const savedFansub = await fansub.save();
-
-        // const user = await User.findById({_id: req.user._id});
-        // user.memberInFansubs.push(savedFansub._id);
-        // await User.findByIdAndUpdate({_id: req.user._id}, user);
+        req.user.memberInFansubs.push(this._id);
+        await req.user.save();
+        const user = await User.findById({_id: req.user._id});
+        user.memberInFansubs.push(savedFansub._id);
+        user.save();
 
         res.status(201).json(savedFansub);
     } catch(err) {
