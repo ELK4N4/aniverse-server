@@ -10,10 +10,12 @@ router.get('/', async (req, res) => {
 
 //DELETE exist fansub
 router.delete('/', async (req, res) => {
-    const deletedFansub = await Fansub.findOneAndRemove({ _id: req.fansubId });
+    const deletedFansub = await Fansub.findOneAndRemove({ _id: req.fansub._id });
     if (deletedFansub) {
         return res.status(203).send(deletedFansub);
     }
+
+    console.log(deletedFansub)
 
     res.status(401).send("Fansub Not Found");
 });
@@ -21,14 +23,14 @@ router.delete('/', async (req, res) => {
 
 //UPDATE fansub
 router.put('/', async (req, res) => {
-    const oldFansub = await Fansub.find({_id: req.fansubId});
+    const oldFansub = await Fansub.find({_id: req.fansub._id});
 
     if(!oldFansub) {
         return res.status(403).send("Fansub Not Found");
     }
     
     const fansubFields = {...oldFansub, ...req.body};
-    const updatedFansub = await Fansub.findOneAndUpdate({_id: req.fansubId}, fansubFields, {new: true});
+    const updatedFansub = await Fansub.findOneAndUpdate({_id: req.fansub._id}, fansubFields, {new: true});
 
     res.status(200).send(updatedFansub);
 });

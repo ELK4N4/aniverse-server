@@ -38,11 +38,8 @@ router.post('/', verify, async (req, res) => {
 
     try {
         const savedFansub = await fansub.save();
-        req.user.memberInFansubs.push(this._id);
+        req.user.memberInFansubs.push(savedFansub._id);
         await req.user.save();
-        const user = await User.findById({_id: req.user._id});
-        user.memberInFansubs.push(savedFansub._id);
-        user.save();
 
         res.status(201).json(savedFansub);
     } catch(err) {
@@ -51,33 +48,6 @@ router.post('/', verify, async (req, res) => {
 
 });
 
-//DELETE exist fansub
-router.delete('/:fansubId', async (req, res) => {
-    const fansubId = req.params.fansubId;
-    const deletedFansub = await Fansub.findOneAndRemove({ _id: fansubId });
-    if (deletedFansub) {
-        return res.status(203).send(deletedFansub);
-    }
-
-    res.status(401).send("Fansub Not Found");
-});
-
-
-//UPDATE fansub
-router.put('/:fansubId', async (req, res) => {
-    const fansubId = req.params.fansubId;
-
-    const oldFansub = await Fansub.find({_id: fansubId});
-
-    if(!oldFansub) {
-        return res.status(403).send("Fansub Not Found");
-    }
-    
-    const fansubFields = {...oldFansub, ...req.body};
-    const updatedFansub = await Fansub.findOneAndUpdate({_id: fansubId}, fansubFields, {new: true});
-
-    res.status(200).send(updatedFansub);
-});
 
 
 /*** PROJECTS ***/
