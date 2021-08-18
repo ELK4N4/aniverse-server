@@ -15,18 +15,18 @@ router.get('/', async (req, res) => {
 
 // GET episode
 router.get('/:episodeId', async (req, res) => {
-    const epidose = await Episode.findById({_id: req.params.episodeId});
-    if(!epidose) {
+    const episode = await Episode.findById({_id: req.params.episodeId});
+    if(!episode) {
         return res.status(403).json({error: "Episode Not Found"});
     }
 
-    res.status(200).send(epidose);
+    res.status(200).send(episode);
 });
 
 //POST new episodes
 router.post('/', verify, async (req, res) => {
     // TODO add check if user member in fansubId...
-    const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id});
+    const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id, season: req.body.season});
     if(episodeExist) {
         return res.status(400).send('הפרק כבר קיים');
     }
@@ -38,7 +38,7 @@ router.post('/', verify, async (req, res) => {
         number: req.body.number,
         link: req.body.link,
         image: req.body.image,
-        season: req.project.season,
+        season: req.body.season,
         post: req.body.post,
         addedByUser: req.user._id,
         addedByFansub: req.fansub._id
@@ -56,13 +56,24 @@ router.post('/', verify, async (req, res) => {
 //UPDATE exist animes
 router.put('/:episodeId', async (req, res) => {
     const episodeId = req.params.episodeId;
-    const oldEpisode = await Episode.find({ _id: episodeId });
+    console.log(episodeId)
+
+    const oldEpisode = await Episode.findById({ _id: episodeId });
 
     if(!oldEpisode) {
-        return res.status(403).send("Episode Not Found");
+        return res.status(403).send("הפרק לא קיים");
     }
     
-    const episodeFields = {...oldEpisode, ...req.body};
+
+    if(oldEpisode.season !== req.body.season || oldEpisode.number !== req.body.number) {
+        const dupCheck = await Episode.findOne({project: req.project._id, number: req.body.number , season: req.body.season });
+        console.log(dupCheck)
+        if(dupCheck) {
+            return res.status(403).send("הפרק כבר קיים");
+        }
+    }
+
+    const episodeFields = {oldEpisode, ...req.body};
     const updatedEpisode = await Episode.findOneAndUpdate({_id: episodeId}, episodeFields, {new: true});
 
     res.status(200).send(updatedEpisode);

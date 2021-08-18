@@ -33,8 +33,8 @@ const projectSchema = new mongoose.Schema({
 
 projectSchema.post("save", async function(savedDoc) {
     try {
-        await mongoose.model('Anime').findByIdAndUpdate({_id: this.anime}, { $push: { projects: this._id } });
-        await mongoose.model('Fansub').findByIdAndUpdate({_id: this.fansub}, { $push: { projects: this._id } });
+        await mongoose.model('Anime').findByIdAndUpdate({_id: this.anime}, { $addToSet: { projects: this._id } });
+        await mongoose.model('Fansub').findByIdAndUpdate({_id: this.fansub}, { $addToSet: { projects: this._id } });
     } catch(err) {
         console.log({err});
     }

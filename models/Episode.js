@@ -57,7 +57,7 @@ const episodeSchema = new mongoose.Schema({
 
 episodeSchema.post("save", async function(savedDoc) {
     try {
-        await Project.findByIdAndUpdate({_id: this.project}, { $push: { episodes: this._id } });
+        await Project.findByIdAndUpdate({_id: this.project}, { $addToSet: { episodes: this._id } });
     } catch(err) {
         console.log({err});
     }

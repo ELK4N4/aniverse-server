@@ -7,18 +7,23 @@ const Anime = require('../../models/Anime');
 const verify = require('../../middlewares/user-parser');
 
 
-//GET all episodes
+//GET all anime episodes
 router.get('/', async (req, res) => {
     const episodes = await Episode.find({anime: req.anime._id});
+    const projects = await Project.find({anime: req.anime._id});
+    
     res.json(episodes);
 });
 
 // GET episode
 router.get('/:episodeId', async (req, res) => {
-    const episode = await Episode.findById({_id: req.params.episodeId});
+    const episode = await Episode.findById({_id: req.params.episodeId}).populate('addedByFansub');
     if(!episode) {
         return res.status(403).json({error: "Episode Not Found"});
     }
+
+    episode.views++;
+    await episode.save();
 
     episode.anime = req.anime;
     res.status(200).send(episode);
@@ -27,7 +32,7 @@ router.get('/:episodeId', async (req, res) => {
 //POST new episodes
 router.post('/', verify, async (req, res) => {
     // TODO add check if user member in fansubId...
-    const episodeExist = await Episode.findOne({episodeNumber: req.body.episodeNumber, addedByFansub: req.body.addedByFansub});
+    const episodeExist = await Episode.findOne({number: req.body.number, addedByFansub: req.body.addedByFansub});
 
     if(episodeExist) {
         return res.status(400).send('Episode already exist');
@@ -35,8 +40,8 @@ router.post('/', verify, async (req, res) => {
 
     const episode = new Episode({
         anime: req.anime._id,
-        episodeName: req.body.episodeName,
-        episodeNumber: req.body.episodeNumber,
+        name: req.body.name,
+        number: req.body.number,
         link: req.body.link,
         image: req.body.image,
         post: req.body.post,
@@ -62,7 +67,7 @@ router.post('/', verify, async (req, res) => {
 
 });
 
-//DELETE exist animes
+//DELETE exist episode
 router.delete('/:episodeId', async (req, res) => {
     const episodeId = req.params.episodeId;
 
@@ -81,21 +86,6 @@ router.delete('/:episodeId', async (req, res) => {
     }
 
     res.status(401).send("Episode Not Found");
-});
-
-
-//UPDATE animes
-router.put('/:animeId', async (req, res) => {
-    const animeId = req.params.animeId;
-    let updatedAnime = req.body;
-
-    const anime = await Anime.findOneAndUpdate({_id: animeId}, updatedAnime, {new: true});
-
-    if(!anime){
-        return res.status(404).send("Anime Not Found");
-    }
-
-    res.status(200).send(anime);
 });
 
 
