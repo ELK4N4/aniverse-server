@@ -1,6 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const Anime = require('../models/Anime');
+import { Router } from 'express';
+import Anime from '../models/Anime.js';
+
+const router = Router();
 
 /*** ALL PROJECTS ***/
 
@@ -85,7 +86,7 @@ router.put('/:animeId', async (req, res) => {
 
 /*** SPECIFIC EPISODES ***/
 
-episodesRouter = require('./episodes/episodes');
+import episodesRouter from './episodes/episodes.js';
 router.use('/:animeId/episodes', async (req, res, next) => {
     const anime = await Anime.findById({_id: req.params.animeId});
     if(!anime) {
@@ -96,4 +97,4 @@ router.use('/:animeId/episodes', async (req, res, next) => {
 }, episodesRouter);
 
 
-module.exports = router;
+export default router;

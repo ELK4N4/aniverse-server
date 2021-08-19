@@ -1,10 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const Fansub = require('../../models/Fansub');
-const User = require('../../models/User');
+import { Router } from 'express';
+import Fansub from '../../models/Fansub.js';
 
-const verify = require('../../middlewares/user-parser');
+import verify from '../../middlewares/user-parser.js';
 
+const router = Router();
 
 //GET all fansubs
 router.get('/', async (req, res) => {
@@ -52,9 +51,9 @@ router.post('/', verify, async (req, res) => {
 
 /*** PROJECTS ***/
 
-fansubRouter = require('./fansub');
+import fansubRouter from './fansub.js';
 router.use('/:fansubId/', async (req, res, next) => {
-    const fansub = await Fansub.findById({_id: req.params.fansubId}).populate({
+    const fansub = await User.findById({_id: req.params.fansubId}).populate({
         path: 'projects',
         model: 'Project',
         populate: {
@@ -70,4 +69,4 @@ router.use('/:fansubId/', async (req, res, next) => {
 }, fansubRouter);
 
 
-module.exports = router;
+export default router;

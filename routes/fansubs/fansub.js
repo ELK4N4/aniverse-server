@@ -1,7 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const Fansub = require('../../models/Fansub');
-const User = require('../../models/User');
+import { Router } from 'express';
+import Fansub from '../../models/Fansub.js';
+import User from '../../models/User.js';
+
+const router = Router();
 
 //GET fansub
 router.get('/', async (req, res) => {
@@ -100,10 +101,10 @@ router.delete('/members/:userId', async (req, res) => {
 
 
 /*** PROJECTS ***/
-projectsRouter = require('./projects');
+import projectsRouter from './projects.js';
 router.use('/projects/', async (req, res, next) => {
     next();
 }, projectsRouter);
 
 
-module.exports = router;
+export default router;

@@ -1,7 +1,6 @@
-const jwt = require('jsonwebtoken');
-const isUser = require('./isUser');
+import isUser from './isUser';
 
-module.exports = async function (req,res,next) {
+export default async function (req,res,next) {
     if(!isUser(req.user)) {
         return res.status(403).redirect('/');
     }

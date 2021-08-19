@@ -5,18 +5,22 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "devStart": "nodemon server.js"
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elkanagit/anime-prime.git"
+    "url": "git+https://github.com/aniverse-corporation/anime-prime.git"
   },
-  "author": "Elkana",
+  "contributors": [
+    "Elkana",
+    "Moshe"
+  ],
   "license": "ISC",
+  "type": "module",
   "bugs": {
-    "url": "https://github.com/elkanagit/anime-prime/issues"
+    "url": "https://github.com/aniverse-corporation/anime-prime/issues"
   },
-  "homepage": "https://github.com/elkanagit/anime-prime#readme",
+  "homepage": "https://github.com/aniverse-corporation/anime-prime#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "bcryptjs": "^2.4.3",
@@ -26,7 +30,8 @@
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.9",
+    "mongodb": "^4.1.0",
+    "mongoose": "^5.13.7",
     "nodemailer": "^6.4.10",
     "serve-favicon": "^2.5.0"
   },

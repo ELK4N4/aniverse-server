@@ -1,7 +1,6 @@
-const jwt = require('jsonwebtoken');
-const isOwner = require('./isOwner');
+import isOwner from './isOwner';
 
-module.exports = async function (req,res,next) {
+export default async function (req,res,next) {
     if(!isOwner(req.user)) {
         return res.status(403).redirect('/');
     }

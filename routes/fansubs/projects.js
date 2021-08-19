@@ -1,11 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const Project = require('../../models/Project');
-const Fansub = require('../../models/Fansub');
-const Anime = require('../../models/Anime');
+import { Router } from 'express';
+import Project from '../../models/Project.js';
+import Anime from '../../models/Anime.js';
+import verify from '../../middlewares/user-parser.js';
 
-const verify = require('../../middlewares/user-parser');
-
+const router = Router();
 
 //GET all projects details
 router.get('/', async (req, res) => {
@@ -65,7 +63,7 @@ router.delete('/:projectId', verify, async (req, res) => {
 });
 
 /*** EPISODES ***/
-episodesRouter = require('./episodes');
+import episodesRouter from './episodes.js';
 router.use('/:projectId/episodes/', async (req, res, next) => {
     const project = await Project.findById({_id: req.params.projectId}).populate({
         path: 'episodes',
@@ -79,4 +77,4 @@ router.use('/:projectId/episodes/', async (req, res, next) => {
 }, episodesRouter);
 
 
-module.exports = router;
+export default router;

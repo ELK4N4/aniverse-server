@@ -1,8 +1,5 @@
-const mongoose = require('mongoose');
-const Episode = require('./Episode');
-const memberSchema = require('./Member');
-const Project = require('./Project');
-const User = require('./User');
+import mongoose from 'mongoose';
+import memberSchema from './Member.js';
 
 const fansubSchema = new mongoose.Schema({
     name: {
@@ -43,14 +40,14 @@ fansubSchema.post("findOneAndRemove", async function(doc) {
         doc.members.forEach(member => {
             usersArr.push(member.userId);
         })
-        await mongoose.model('User').updateMany({ _id: { $in: usersArr }}, { $pull: { memberInFansubs: doc._id } });
-        const projects = await mongoose.model('Project').find({ fansub: doc._id }); // TODO: get only IDs
+        await model('User').updateMany({ _id: { $in: usersArr }}, { $pull: { memberInFansubs: doc._id } });
+        const projects = await model('Project').find({ fansub: doc._id }); // TODO: get only IDs
         projects.forEach(async project => {
-            await mongoose.model('Project').findOneAndRemove({ _id: project._id });
+            await model('Project').findOneAndRemove({ _id: project._id });
         })
     } catch(err) {
         console.log({err});
     }
 });
 
-module.exports = mongoose.model('Fansub', fansubSchema, 'Fansubs');
+export default mongoose.model('Fansub', fansubSchema, 'Fansubs');

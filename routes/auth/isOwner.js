@@ -1,4 +1,4 @@
-module.exports = function (user) {
+export default function (user) {
     if(user.role.includes('owner')) {
         return true;
     } else {

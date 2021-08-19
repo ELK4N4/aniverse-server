@@ -1,10 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const getData = require('../data');
+import { Router } from 'express';
+import getData from '../data';
+
+const router = Router();
 
 router.get('/', async (req, res) => {
     const data = await getData('register', 'הירשם', req.user);
     res.render('register.ejs', {data});
 });
 
-module.exports = router;
+export default router;

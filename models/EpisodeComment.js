@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const episodeCommentSchema = new mongoose.Schema({
     message: {
@@ -19,4 +19,4 @@ const episodeCommentSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('EpisodeComment', episodeCommentSchema, 'EpisodeComments');
+export default mongoose.model('EpisodeComment', episodeCommentSchema, 'EpisodeComments');

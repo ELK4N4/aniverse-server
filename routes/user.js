@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const User = require('../models/User');
-const Fansub = require('../models/Fansub');
+import { Router } from 'express';
+import Fansub from '../models/Fansub.js';
+
+const router = Router();
 
 router.get('/', async (req, res) => {
     console.log(req.user)
@@ -16,4 +16,4 @@ router.get('/my-fansubs', async (req, res) => {
     res.status(200).json(fansubs);
 });
 
-module.exports = router;
+export default router;

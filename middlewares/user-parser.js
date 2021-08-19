@@ -1,9 +1,7 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const isAdmin = require('../routes/auth/isAdmin');
-const isOwner = require('../routes/auth/isOwner');
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
-module.exports = async function (req,res,next) {
+const userParser = async (req,res,next) => {
     const token = req.headers.authorization?.split(" ")[1];
     const guestUser = {
         username: "אורח",
@@ -20,7 +18,7 @@ module.exports = async function (req,res,next) {
     try {
         const verified = jwt.verify(token, process.env.TOKEN_SECRET);
         try {
-            user = await User.findOne({_id: verified.id});
+            const user = await User.findOne({_id: verified.id});
             req.user = user;
             req.user.verified = true;
         } catch(err) {
@@ -32,3 +30,4 @@ module.exports = async function (req,res,next) {
         res.status(401).send('Invalid Token');
     }
 }
+export default userParser;

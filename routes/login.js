@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const verify = require('../middlewares/user-parser');
+import { Router } from 'express';
+import verify from '../middlewares/user-parser.js';
 
+const router = Router();
 
 router.get('/', verify, async (req, res) => {
     res.json(req.user);
 });
 
-module.exports = router;
+export default router;
