@@ -1,5 +1,6 @@
 /* Import Modules */
 import dotenv from 'dotenv';
+import helemt from 'helmet';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
@@ -32,7 +33,7 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.set('layout', 'layouts/layout');
 
-
+app.use(helemt());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "*");
