@@ -25,6 +25,13 @@ dotenv.config();
 // see https://expressjs.com/en/guide/behind-proxies.html
 // app.set('trust proxy', 1);
 
+<<<<<<< HEAD
+=======
+const limiter = rateLimit({
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+});
+>>>>>>> 9680eb036d6fe2acf177a61b67e9e77c75eaa1ce
 
 /* Constant Variables */
 const app = express();
