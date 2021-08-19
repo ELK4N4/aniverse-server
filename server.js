@@ -17,9 +17,18 @@ import animesRouter from './routes/animes.js';
 import loginRouter from './routes/login.js';
 import authRouter from './routes/auth/auth.js';
 import userRouter from './routes/user.js';
+import rateLimit  from "express-rate-limit";
 
-const app = express();
 dotenv.config();
+
+// Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+// see https://expressjs.com/en/guide/behind-proxies.html
+// app.set('trust proxy', 1);
+
+const limiter = rateLimit({
+    windowMs: 5 * 60 * 1000, // 5 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+});
 
 /* Constant Variables */
 const PORT = process.env.PORT || 5000;
@@ -33,6 +42,9 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.set('layout', 'layouts/layout');
 
+
+  
+app.use(limiter);
 app.use(helemt());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
