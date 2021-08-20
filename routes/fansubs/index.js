@@ -1,6 +1,5 @@
 import { Router } from '@awaitjs/express';
 import Fansub from '../../models/Fansub.js';
-
 import verify from '../../middlewares/user-parser.js';
 
 const router = Router();
@@ -49,7 +48,7 @@ router.postAsync('/', verify, async (req, res) => {
 
 import fansubRouter from './fansub.js';
 router.useAsync('/:fansubId/', async (req, res, next) => {
-    const fansub = await User.findById({_id: req.params.fansubId}).populate({
+    const fansub = await Fansub.findById({_id: req.params.fansubId}).populate({
         path: 'projects',
         model: 'Project',
         populate: {

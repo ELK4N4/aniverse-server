@@ -43,13 +43,9 @@ router.postAsync('/', verify, async (req, res) => {
         addedByUser: req.user._id
     });
 
-    try {
-        const savedProject = await project.save();
-        savedProject.anime = anime;
-        res.status(201).json(savedProject);
-    } catch(err) {
-        res.status(400).send(err);
-    }
+    const savedProject = await project.save();
+    savedProject.anime = anime;
+    res.status(201).json(savedProject);
 });
 
 //DELETE project
