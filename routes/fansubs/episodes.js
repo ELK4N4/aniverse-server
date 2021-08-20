@@ -1,17 +1,17 @@
-import { Router } from 'express';
+import { Router } from '@awaitjs/express';
 import Episode from '../../models/Episode.js';
 import verify from '../../middlewares/user-parser.js';
 
 const router = Router();
 
 //GET all episodes
-router.get('/', async (req, res) => {
+router.getAsync('/', async (req, res) => {
     const episodes = await Episode.find();
     res.json(episodes);
 });
 
 // GET episode
-router.get('/:episodeId', async (req, res) => {
+router.getAsync('/:episodeId', async (req, res) => {
     const episode = await Episode.findById({_id: req.params.episodeId});
     if(!episode) {
         return res.status(403).json({error: "Episode Not Found"});
@@ -21,7 +21,7 @@ router.get('/:episodeId', async (req, res) => {
 });
 
 //POST new episodes
-router.post('/', verify, async (req, res) => {
+router.postAsync('/', verify, async (req, res) => {
     // TODO add check if user member in fansubId...
     const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id, season: req.body.season});
     if(episodeExist) {
@@ -41,17 +41,13 @@ router.post('/', verify, async (req, res) => {
         addedByFansub: req.fansub._id
     });
 
-    try {
-        const savedEpisode = await episode.save();
-        res.status(201).json(savedEpisode);
-    } catch(err) {
-        res.status(400).send(err);
-    }
+    const savedEpisode = await episode.save();
+    res.status(201).json(savedEpisode);
 
 });
 
 //UPDATE exist animes
-router.put('/:episodeId', async (req, res) => {
+router.putAsync('/:episodeId', async (req, res) => {
     const episodeId = req.params.episodeId;
     console.log(episodeId)
 
@@ -77,7 +73,7 @@ router.put('/:episodeId', async (req, res) => {
 });
 
 //DELETE exist animes
-router.delete('/:episodeId', async (req, res) => {
+router.deleteAsync('/:episodeId', async (req, res) => {
     const episodeId = req.params.episodeId;
     const deletedEpisode = await Episode.findOneAndRemove({ _id: episodeId });
 

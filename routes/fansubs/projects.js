@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from '@awaitjs/express';
 import Project from '../../models/Project.js';
 import Anime from '../../models/Anime.js';
 import verify from '../../middlewares/user-parser.js';
@@ -6,7 +6,7 @@ import verify from '../../middlewares/user-parser.js';
 const router = Router();
 
 //GET all projects details
-router.get('/', async (req, res) => {
+router.getAsync('/', async (req, res) => {
     const projects = await Project.find({fansub: req.fansub._id}).populate('anime');
     if(!projects) {
         return res.status(400).send('Projects Not Exist');
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     res.json(projects);
 });
 
-router.get('/:projectId', async (req, res) => {
+router.getAsync('/:projectId', async (req, res) => {
     const project = await Project.findById({_id: req.params.projectId}).populate({
         path: 'episodes',
         model: 'Episode',
@@ -26,7 +26,7 @@ router.get('/:projectId', async (req, res) => {
 });
 
 //POST new project
-router.post('/', verify, async (req, res) => {
+router.postAsync('/', verify, async (req, res) => {
     const anime = await Anime.findById({_id: req.body._id});
     if(!anime) {
         return res.status(400).send('Anime Not Exist');
@@ -53,7 +53,7 @@ router.post('/', verify, async (req, res) => {
 });
 
 //DELETE project
-router.delete('/:projectId', verify, async (req, res) => {
+router.deleteAsync('/:projectId', verify, async (req, res) => {
     const deletedProject = await Project.findByIdAndRemove({ _id: req.params.projectId });
     if (deletedProject) {
         return res.status(203).send(deletedProject);
@@ -64,7 +64,7 @@ router.delete('/:projectId', verify, async (req, res) => {
 
 /*** EPISODES ***/
 import episodesRouter from './episodes.js';
-router.use('/:projectId/episodes/', async (req, res, next) => {
+router.useAsync('/:projectId/episodes/', async (req, res, next) => {
     const project = await Project.findById({_id: req.params.projectId}).populate({
         path: 'episodes',
         model: 'Episode',

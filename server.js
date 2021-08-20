@@ -8,7 +8,7 @@ import favicon from 'serve-favicon';
 import expressLayout from 'express-ejs-layouts';
 import cookieParser from 'cookie-parser';
 import userParser from './middlewares/user-parser.js';
-
+import { addAsync } from '@awaitjs/express';
 
 /* Import Routers */
 import indexRouter from './routes/index.js';
@@ -27,7 +27,7 @@ dotenv.config();
 
 
 /* Constant Variables */
-const app = express();
+const app = addAsync(express());
 const PORT = process.env.PORT || 5000;
 const DATABASE_URL = process.env.DATABASE_URL || "mongodb://localhost/test";
 const __filename = fileURLToPath(import.meta.url);
@@ -40,30 +40,28 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 const isProduction = process.env.NODE_ENV === 'production';
 
 /* Server Setup */
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
-app.set('layout', 'layouts/layout');
-
 
 if(isProduction)
 {
     app.use(limiter);
 }
-app.use(helemt());
-app.use(function(req, res, next) {
+app.useAsync(helemt());
+app.useAsync(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
     next();
 });
-app.use(expressLayout);
-app.use(express.static('public'));
-app.use(favicon(__dirname + '/public/images/favicon.png'));
-app.use(express.urlencoded({extended: false}));
-app.use(express.json());
-app.use(cookieParser());
-app.use(userParser);
-
+app.useAsync(expressLayout);
+app.useAsync(express.static('public'));
+app.useAsync(favicon(__dirname + '/public/images/favicon.png'));
+app.useAsync(express.urlencoded({extended: false}));
+app.useAsync(express.json());
+app.useAsync(cookieParser());
+app.useAsync(userParser);
+app.useAsync(function(error, req, res, next) {
+    res.json({ error: error.message});
+});
 
 /* DataBase */
 
@@ -83,14 +81,14 @@ mongoose.connect(
 ); // mongoose.set('useFindAndModify', false);
 
 /* Routes */
-app.use('/', indexRouter);
+app.useAsync('/', indexRouter);
 // app.use('/about', aboutRouter);
 // app.use('/team', teamRouter);
-app.use('/fansubs', fansubsRouter);
-app.use('/animes', animesRouter);
-app.use('/user', userRouter);
-app.use('/login', loginRouter);
-app.use('/auth', authRouter);
+app.useAsync('/fansubs', fansubsRouter);
+app.useAsync('/animes', animesRouter);
+app.useAsync('/user', userRouter);
+app.useAsync('/login', loginRouter);
+app.useAsync('/auth', authRouter);
 
 
 /* Server Listening */

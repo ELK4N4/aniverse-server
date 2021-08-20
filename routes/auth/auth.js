@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from '@awaitjs/express';
 import User from '../../models/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 const router = Router();
 
 //Login
-router.post('/login', async (req, res) => {
+router.postAsync('/login', async (req, res) => {
     const user = await User.findOne({email: req.body.email});
     //checking if the user exist
     if(!user) {
@@ -26,7 +26,7 @@ router.post('/login', async (req, res) => {
 });
 
 //Register
-router.post('/register', async (req, res) => {
+router.postAsync('/register', async (req, res) => {
     const emailExist = await User.findOne({email: req.body.email});
 
     if(emailExist) {
@@ -49,18 +49,14 @@ router.post('/register', async (req, res) => {
         email: req.body.email,
         password: hashedPassword
     });
-    try {
-        const savedUser = await user.save();
-        //Create and assign a TOKEN
-        const token = jwt.sign({id: user._id, username: user.username}, process.env.TOKEN_SECRET, {expiresIn: '7d'});
-        return res.status(200).json({token, user: savedUser});
-    } catch(err) {
-        return res.status(400).send(err);
-    }
+    const savedUser = await user.save();
+    //Create and assign a TOKEN
+    const token = jwt.sign({id: user._id, username: user.username}, process.env.TOKEN_SECRET, {expiresIn: '7d'});
+    return res.status(200).json({token, user: savedUser});
 
 });
 
-router.get('/logout', (req, res) => {
+router.getAsync('/logout', (req, res) => {
     res.clearCookie('auth-token').status(204).redirect('/');
 });
 

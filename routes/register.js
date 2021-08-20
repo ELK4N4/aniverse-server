@@ -1,9 +1,9 @@
-import { Router } from 'express';
+import { Router } from '@awaitjs/express';
 import getData from '../data';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.getAsync('/', async (req, res) => {
     const data = await getData('register', 'הירשם', req.user);
     res.render('register.ejs', {data});
 });
