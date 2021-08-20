@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+import Joi from "@hapi/joi";
 
 //Register Validation
 const registerValidation = (data) => {
@@ -72,10 +72,11 @@ const userValidation = (data) => {
     });
     return userValidation.validate(data);
 };
-
-module.exports.loginValidation = loginValidation;
-module.exports.registerValidation = registerValidation;
-module.exports.projectValidation = projectValidation;
-module.exports.commentValidation = commentValidation;
-module.exports.userValidation = userValidation;
-module.exports.episodeValidation = episodeValidation;
+export default {
+    loginValidation,
+    registerValidation,
+    projectValidation,
+    commentValidation,
+    userValidation,
+    episodeValidation
+};

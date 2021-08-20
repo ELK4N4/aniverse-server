@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Project = require('./Project');
+import mongoose from 'mongoose';
+import Project from './Project.js';
 
 const episodeSchema = new mongoose.Schema({
     anime: {
@@ -71,4 +71,4 @@ episodeSchema.post("findOneAndRemove", async function(doc) {
     }
 });
 
-module.exports = mongoose.model('Episode', episodeSchema, 'Episodes');
+export default mongoose.model('Episode', episodeSchema, 'Episodes');

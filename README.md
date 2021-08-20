@@ -1,6 +1,6 @@
-# Welcome To ShonSub Web Repo!
+# Welcome To AnimePrime Web Repo!
 
-A website for ShonSub - Social Community For Anime
+A website for AnimePrime - Social Community For Anime
 
 ### Design Pattern
 MVC
@@ -19,7 +19,7 @@ MVC
 
 ## Contributing
 
-1. Pull this repo to your local machine using `git clone https://github.com/ELK4N4/ShonSub.git`
+1. Pull this repo to your local machine using `git clone https://github.com/ELK4N4/AnimePrime.git`
 2. Create your feature branch: `git checkout -b my-new-feature`
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`

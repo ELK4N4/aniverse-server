@@ -1,19 +1,17 @@
-const express = require('express');
-const router = express.Router();
-const Fansub = require('../../models/Fansub');
-const User = require('../../models/User');
+import { Router } from '@awaitjs/express';
+import Fansub from '../../models/Fansub.js';
+import verify from '../../middlewares/user-parser.js';
 
-const verify = require('../../middlewares/user-parser');
-
+const router = Router();
 
 //GET all fansubs
-router.get('/', async (req, res) => {
+router.getAsync('/', async (req, res) => {
     const fansubs = await Fansub.find();
     res.json(fansubs);
 });
 
 //POST new fansub
-router.post('/', verify, async (req, res) => {
+router.postAsync('/', verify, async (req, res) => {
     const fansubExist = await Fansub.findOne({name: req.body.name});
 
     if(fansubExist) {
@@ -36,15 +34,11 @@ router.post('/', verify, async (req, res) => {
         }]
     });
 
-    try {
-        const savedFansub = await fansub.save();
-        req.user.memberInFansubs.push(savedFansub._id);
-        await req.user.save();
+    const savedFansub = await fansub.save();
+    req.user.memberInFansubs.push(savedFansub._id);
+    await req.user.save();
 
-        res.status(201).json(savedFansub);
-    } catch(err) {
-        res.status(400).send(err);
-    }
+    res.status(201).json(savedFansub);
 
 });
 
@@ -52,8 +46,8 @@ router.post('/', verify, async (req, res) => {
 
 /*** PROJECTS ***/
 
-fansubRouter = require('./fansub');
-router.use('/:fansubId/', async (req, res, next) => {
+import fansubRouter from './fansub.js';
+router.useAsync('/:fansubId/', async (req, res, next) => {
     const fansub = await Fansub.findById({_id: req.params.fansubId}).populate({
         path: 'projects',
         model: 'Project',
@@ -70,4 +64,4 @@ router.use('/:fansubId/', async (req, res, next) => {
 }, fansubRouter);
 
 
-module.exports = router;
+export default router;

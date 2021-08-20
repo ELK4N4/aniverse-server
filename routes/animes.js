@@ -1,11 +1,12 @@
-const express = require('express');
-const router = express.Router();
-const Anime = require('../models/Anime');
+import { Router } from '@awaitjs/express';
+import Anime from '../models/Anime.js';
+
+const router = Router();
 
 /*** ALL PROJECTS ***/
 
 //GET all animes
-router.get('/', async (req, res) => {
+router.getAsync('/', async (req, res) => {
     let animes;
     if (req.query.search) {
         animes = await Anime.find({ 'name.hebrew' : new RegExp('^' + req.query.search + '$', "i")});
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET anime
-router.get('/:animeId', async (req, res) => {
+router.getAsync('/:animeId', async (req, res) => {
     const anime = await Anime.findById({_id: req.params.animeId});
     if(!anime) {
         return res.status(403).json({error: "Anime Not Found"});
@@ -25,7 +26,7 @@ router.get('/:animeId', async (req, res) => {
 });
 
 //POST new animes
-router.post('/', async (req, res) => {
+router.postAsync('/', async (req, res) => {
     const anime = new Anime({
         name: {
             hebrew: req.body.hebrewName,
@@ -56,7 +57,7 @@ router.post('/', async (req, res) => {
 });
 
 //DELETE exist animes
-router.delete('/:animeId', async (req, res) => {
+router.deleteAsync('/:animeId', async (req, res) => {
     const animeId = req.params.animeId;
     const deletedAnime = await Anime.findOneAndRemove({ _id: animeId });
     if (deletedAnime) {
@@ -68,7 +69,7 @@ router.delete('/:animeId', async (req, res) => {
 
 
 //UPDATE animes
-router.put('/:animeId', async (req, res) => {
+router.putAsync('/:animeId', async (req, res) => {
     const animeId = req.params.animeId;
     let updatedAnime = req.body;
 
@@ -85,8 +86,8 @@ router.put('/:animeId', async (req, res) => {
 
 /*** SPECIFIC EPISODES ***/
 
-episodesRouter = require('./episodes/episodes');
-router.use('/:animeId/episodes', async (req, res, next) => {
+import episodesRouter from './episodes/episodes.js';
+router.useAsync('/:animeId/episodes', async (req, res, next) => {
     const anime = await Anime.findById({_id: req.params.animeId});
     if(!anime) {
         return res.status(403).json({error: "Anime Not Found"});
@@ -96,4 +97,4 @@ router.use('/:animeId/episodes', async (req, res, next) => {
 }, episodesRouter);
 
 
-module.exports = router;
+export default router;

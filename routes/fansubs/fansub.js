@@ -1,15 +1,16 @@
-const express = require('express');
-const router = express.Router();
-const Fansub = require('../../models/Fansub');
-const User = require('../../models/User');
+import { Router } from '@awaitjs/express';
+import Fansub from '../../models/Fansub.js';
+import User from '../../models/User.js';
+
+const router = Router();
 
 //GET fansub
-router.get('/', async (req, res) => {
+router.getAsync('/', async (req, res) => {
     res.json(req.fansub);
 });
 
 //DELETE exist fansub
-router.delete('/', async (req, res) => {
+router.deleteAsync('/', async (req, res) => {
     const deletedFansub = await Fansub.findOneAndRemove({ _id: req.fansub._id });
     if (deletedFansub) {
         return res.status(203).send(deletedFansub);
@@ -22,7 +23,7 @@ router.delete('/', async (req, res) => {
 
 
 //UPDATE fansub
-router.put('/', async (req, res) => {
+router.putAsync('/', async (req, res) => {
     const oldFansub = await Fansub.find({_id: req.fansub._id});
 
     if(!oldFansub) {
@@ -38,7 +39,7 @@ router.put('/', async (req, res) => {
 ///MEMBERS///
 
 //GET members
-router.get('/members', async (req, res) => {
+router.getAsync('/members', async (req, res) => {
     const members = JSON.parse(JSON.stringify(req.fansub.members));
     for (let i = 0; i < members.length; i++) {
         const user = await User.findById({_id: members[i].userId});
@@ -50,7 +51,7 @@ router.get('/members', async (req, res) => {
 });
 
 //POST member
-router.post('/members/:username', async (req, res) => {
+router.postAsync('/members/:username', async (req, res) => {
     const user = await User.findOne({username: req.params.username});
     if(!user) {
         return res.status(403).send("Username Not Found");
@@ -78,7 +79,7 @@ router.post('/members/:username', async (req, res) => {
 });
 
 //UPDATE member
-router.put('/members/:userId', async (req, res) => {
+router.putAsync('/members/:userId', async (req, res) => {
     const memberIndex = req.fansub.members.findIndex(member => member.userId.equals(req.params.userId));
     req.fansub.members[memberIndex].roles = req.body.roles;
     req.fansub.members[memberIndex].permissions = req.body.permissions;
@@ -87,7 +88,7 @@ router.put('/members/:userId', async (req, res) => {
 });
 
 //DELETE member
-router.delete('/members/:userId', async (req, res) => {
+router.deleteAsync('/members/:userId', async (req, res) => {
     req.fansub.members = req.fansub.members.filter(member => !member.userId.equals(req.params.userId));
     await req.fansub.save();
 
@@ -100,10 +101,10 @@ router.delete('/members/:userId', async (req, res) => {
 
 
 /*** PROJECTS ***/
-projectsRouter = require('./projects');
-router.use('/projects/', async (req, res, next) => {
+import projectsRouter from './projects.js';
+router.useAsync('/projects/', async (req, res, next) => {
     next();
 }, projectsRouter);
 
 
-module.exports = router;
+export default router;

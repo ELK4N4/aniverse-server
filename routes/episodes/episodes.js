@@ -1,22 +1,21 @@
-const express = require('express');
-const router = express.Router();
-const Episode = require('../../models/Episode');
-const Fansub = require('../../models/Fansub');
-const Project = require('../../models/Project');
-const Anime = require('../../models/Anime');
-const verify = require('../../middlewares/user-parser');
+import Episode from '../../models/Episode.js';
+import Project from '../../models/Project.js';
+import Anime from '../../models/Anime.js';
+import verify from '../../middlewares/user-parser.js';
+import { Router } from '@awaitjs/express';
 
+const router = Router();
 
 //GET all anime episodes
-router.get('/', async (req, res) => {
+router.getAsync('/', async (req, res) => {
     const episodes = await Episode.find({anime: req.anime._id});
-    const projects = await Project.find({anime: req.anime._id});
+    // const projects = await Project.find({anime: req.anime._id});
     
     res.json(episodes);
 });
 
 // GET episode
-router.get('/:episodeId', async (req, res) => {
+router.getAsync('/:episodeId', async (req, res) => {
     const episode = await Episode.findById({_id: req.params.episodeId}).populate('addedByFansub');
     if(!episode) {
         return res.status(403).json({error: "Episode Not Found"});
@@ -30,7 +29,7 @@ router.get('/:episodeId', async (req, res) => {
 });
 
 //POST new episodes
-router.post('/', verify, async (req, res) => {
+router.postAsync('/', verify, async (req, res) => {
     // TODO add check if user member in fansubId...
     const episodeExist = await Episode.findOne({number: req.body.number, addedByFansub: req.body.addedByFansub});
 
@@ -49,26 +48,22 @@ router.post('/', verify, async (req, res) => {
         addedByFansub: req.body.addedByFansub
     });
 
-    try {
-        const savedEpisode = await episode.save();
+    const savedEpisode = await episode.save();
 
-        const anime = await Anime.findById({_id: req.anime._id});
-        anime.episodes.push(savedEpisode._id);
-        await Anime.findByIdAndUpdate({_id: req.anime._id}, anime);
+    const anime = await Anime.findById({_id: req.anime._id});
+    anime.episodes.push(savedEpisode._id);
+    await Anime.findByIdAndUpdate({_id: req.anime._id}, anime);
 
-        const project = await Project.findOne({anime: req.anime._id});
-        project.episodes.push(savedEpisode._id);
-        await Project.findOneAndUpdate({anime: req.anime._id}, project);
+    const project = await Project.findOne({anime: req.anime._id});
+    project.episodes.push(savedEpisode._id);
+    await Project.findOneAndUpdate({anime: req.anime._id}, project);
         
-        res.status(201).json(savedEpisode);
-    } catch(err) {
-        res.status(400).send(err);
-    }
+    res.status(201).json(savedEpisode);
 
 });
 
 //DELETE exist episode
-router.delete('/:episodeId', async (req, res) => {
+router.deleteAsync('/:episodeId', async (req, res) => {
     const episodeId = req.params.episodeId;
 
     const deletedEpisode = await Episode.findOneAndRemove({ _id: episodeId });
@@ -101,4 +96,4 @@ router.delete('/:episodeId', async (req, res) => {
 // }, episodesRouter);
 
 
-module.exports = router;
+export default router;

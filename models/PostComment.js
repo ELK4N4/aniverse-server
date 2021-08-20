@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const postCommentSchema = new mongoose.Schema({
     message: {
@@ -19,4 +19,4 @@ const postCommentSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('PostComment', postCommentSchema, 'PostComments');
+export default mongoose.model('PostComment', postCommentSchema, 'PostComments');

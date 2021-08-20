@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const memberSchema = new mongoose.Schema({
     roles: {
@@ -15,4 +15,4 @@ const memberSchema = new mongoose.Schema({
     }
 }, { _id : false });
 
-module.exports = memberSchema;
+export default memberSchema;
