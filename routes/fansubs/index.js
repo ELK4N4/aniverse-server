@@ -52,12 +52,12 @@ router.useAsync('/:fansubId/', async (req, res, next) => {
         path: 'projects',
         model: 'Project',
         populate: {
-          path: 'anime',
-          model: 'Anime',
+            path: 'anime',
+            model: 'Anime',
         },
     });
     if(!fansub) {
-        return res.status(400).json({error: 'Fansub Not Exist'})
+        return res.status(400).json({error: 'Fansub Not Exist'});
     }
     req.fansub = fansub;
     next();

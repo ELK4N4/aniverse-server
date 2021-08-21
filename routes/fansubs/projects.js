@@ -18,8 +18,8 @@ router.getAsync('/:projectId', async (req, res) => {
     const project = await Project.findById({_id: req.params.projectId}).populate({
         path: 'episodes',
         model: 'Episode',
-    });;
-     if(!project) {
+    });
+    if(!project) {
         return res.status(400).send('Projects Not Exist');
     }
     res.json(project);
@@ -55,7 +55,7 @@ router.deleteAsync('/:projectId', verify, async (req, res) => {
         return res.status(203).send(deletedProject);
     }
 
-    res.status(401).send("Project Not Found");
+    res.status(401).send('Project Not Found');
 });
 
 /*** EPISODES ***/
@@ -66,7 +66,7 @@ router.useAsync('/:projectId/episodes/', async (req, res, next) => {
         model: 'Episode',
     });
     if(!project) {
-        return res.status(400).json({error: 'Project Not Exist'})
+        return res.status(400).json({error: 'Project Not Exist'});
     }
     req.project = project;
     next();

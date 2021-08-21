@@ -1,10 +1,8 @@
+/* eslint-disable no-undef */
 /* Import Modules */
 import dotenv from 'dotenv';
 import helmet from 'helmet';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import express from 'express';
-import favicon from 'serve-favicon';
 import cookieParser from 'cookie-parser';
 import userParser from './middlewares/user-parser.js';
 import { addAsync } from '@awaitjs/express';
@@ -18,7 +16,7 @@ import animesRouter from './routes/animes.js';
 import loginRouter from './routes/login.js';
 import authRouter from './routes/auth/auth.js';
 import userRouter from './routes/user.js';
-import rateLimit  from "express-rate-limit";
+import rateLimit  from 'express-rate-limit';
 
 dotenv.config();
 
@@ -28,14 +26,12 @@ dotenv.config();
 /* Constant Variables */
 const app = addAsync(express());
 const PORT = process.env.PORT || 5000;
-const DATABASE_URL = process.env.DATABASE_URL || "mongodb://localhost/test";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const DATABASE_URL = process.env.DATABASE_URL || 'mongodb://localhost/test';
 const limiter = rateLimit({
     windowMs: 5 * 60 * 1000, // 5 minutes
     max: 100 // limit each IP to 100 requests per windowMs
 });
-const isDevelopment = process.env.NODE_ENV === 'development';
+// const isDevelopment = process.env.NODE_ENV === 'development';
 const isProduction = process.env.NODE_ENV === 'production';
 
 /* Server Setup */
@@ -45,7 +41,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 // app.set('trust proxy', 1);
 
 app.use(morgan(isProduction ? 'combined' : 'dev'));
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
     res.status(400).json({ error: err.message});
 });
 
@@ -56,9 +52,9 @@ if(isProduction)
 app.use(helmet());
 app.use(cors());
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "*");
-    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
     next();
 });
 app.use(express.urlencoded({extended: false}));
