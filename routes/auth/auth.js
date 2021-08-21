@@ -12,7 +12,6 @@ router.postAsync('/login', async (req, res) => {
     if(!user) {
         return res.status(400).send('Email or password is wrong');
     }
-    // throw new Error("Shoops");
 
     //checking if password is correct
     const validPassword = await bcrypt.compare(req.body.password, user.password);

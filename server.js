@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* Import Modules */
 import dotenv from 'dotenv';
 import helmet from 'helmet';
