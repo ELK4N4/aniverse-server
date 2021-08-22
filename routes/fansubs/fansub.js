@@ -3,15 +3,57 @@ import Fansub from '../../models/Fansub.js';
 import User from '../../models/User.js';
 
 const router = Router();
+// Will be prefixed with fansub id and fansub in request body
+const fansubRouter = Router({mergeParams: true});
+
+
 
 //GET fansub
-router.getAsync('/', async (req, res) => {
+fansubRouter.getAsync('', async (req, res) => {
     res.json(req.fansub);
 });
 
+//GET all fansubs
+router.getAsync('/', async (req, res) => {
+    const fansubs = await Fansub.find();
+    res.json(fansubs);
+});
+
+//POST new fansub
+router.postAsync('/', async (req, res) => {
+    const fansubExist = await Fansub.findOne({name: req.body.name});
+
+    if(fansubExist) {
+        return res.status(400).send('Fansub name already exist');
+    }
+
+    const fansub = new Fansub({
+        name: req.body.name,
+        image: req.body.image,
+        createdByUser: req.user._id,
+        members: [{
+            userId: req.user._id,
+            roles: ['admin'],
+            permissions: [
+                'projects',
+                'fansub',
+                'episodes',
+                'members',
+            ]
+        }]
+    });
+
+    const savedFansub = await fansub.save();
+    req.user.memberInFansubs.push(savedFansub._id);
+    await req.user.save();
+
+    res.status(201).json(savedFansub);
+
+});
+
 //DELETE exist fansub
-router.deleteAsync('/', async (req, res) => {
-    const deletedFansub = await Fansub.findOneAndRemove({ _id: req.fansub._id });
+fansubRouter.deleteAsync('', async (req, res) => {
+    const deletedFansub = await Fansub.findOneAndDelete({ _id: req.fansub._id });
     if (deletedFansub) {
         return res.status(203).send(deletedFansub);
     }
@@ -23,7 +65,7 @@ router.deleteAsync('/', async (req, res) => {
 
 
 //UPDATE fansub
-router.putAsync('/', async (req, res) => {
+fansubRouter.putAsync('', async (req, res) => {
     const oldFansub = await Fansub.find({_id: req.fansub._id});
 
     if(!oldFansub) {
@@ -39,7 +81,7 @@ router.putAsync('/', async (req, res) => {
 ///MEMBERS///
 
 //GET members
-router.getAsync('/members', async (req, res) => {
+fansubRouter.getAsync('/members', async (req, res) => {
     const members = JSON.parse(JSON.stringify(req.fansub.members));
     for (let i = 0; i < members.length; i++) {
         const user = await User.findById({_id: members[i].userId});
@@ -51,7 +93,7 @@ router.getAsync('/members', async (req, res) => {
 });
 
 //POST member
-router.postAsync('/members/:username', async (req, res) => {
+fansubRouter.postAsync('/members/:username', async (req, res) => {
     const user = await User.findOne({username: req.params.username});
     if(!user) {
         return res.status(403).send('Username Not Found');
@@ -79,7 +121,7 @@ router.postAsync('/members/:username', async (req, res) => {
 });
 
 //UPDATE member
-router.putAsync('/members/:userId', async (req, res) => {
+fansubRouter.putAsync('/members/:userId', async (req, res) => {
     const memberIndex = req.fansub.members.findIndex(member => member.userId.equals(req.params.userId));
     req.fansub.members[memberIndex].roles = req.body.roles;
     req.fansub.members[memberIndex].permissions = req.body.permissions;
@@ -88,7 +130,7 @@ router.putAsync('/members/:userId', async (req, res) => {
 });
 
 //DELETE member
-router.deleteAsync('/members/:userId', async (req, res) => {
+fansubRouter.deleteAsync('/members/:userId', async (req, res) => {
     req.fansub.members = req.fansub.members.filter(member => !member.userId.equals(req.params.userId));
     await req.fansub.save();
 
@@ -102,9 +144,25 @@ router.deleteAsync('/members/:userId', async (req, res) => {
 
 /*** PROJECTS ***/
 import projectsRouter from './projects.js';
-router.useAsync('/projects/', async (req, res, next) => {
+fansubRouter.useAsync('/projects/', async (req, res, next) => {
     next();
 }, projectsRouter);
 
+
+router.useAsync('/:fansubId/', async (req, res, next) => {
+    const fansub = await Fansub.findById({_id: req.params.fansubId}).populate({
+        path: 'projects',
+        model: 'Project',
+        populate: {
+            path: 'anime',
+            model: 'Anime',
+        },
+    });
+    if(!fansub) {
+        return res.status(400).json({error: 'Fansub Not Exist'});
+    }
+    req.fansub = fansub;
+    next();
+}, fansubRouter);
 
 export default router;

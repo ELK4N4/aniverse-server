@@ -1,6 +1,5 @@
 import { Router } from '@awaitjs/express';
 import Episode from '../../models/Episode.js';
-import verify from '../../middlewares/user-parser.js';
 
 const router = Router();
 
@@ -21,7 +20,7 @@ router.getAsync('/:episodeId', async (req, res) => {
 });
 
 //POST new episodes
-router.postAsync('/', verify, async (req, res) => {
+router.postAsync('/', async (req, res) => {
     // TODO add check if user member in fansubId...
     const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id, season: req.body.season});
     if(episodeExist) {
@@ -74,7 +73,7 @@ router.putAsync('/:episodeId', async (req, res) => {
 //DELETE exist animes
 router.deleteAsync('/:episodeId', async (req, res) => {
     const episodeId = req.params.episodeId;
-    const deletedEpisode = await Episode.findOneAndRemove({ _id: episodeId });
+    const deletedEpisode = await Episode.findOneAndDelete({ _id: episodeId });
 
     if (deletedEpisode) {
         return res.status(203).send(deletedEpisode);

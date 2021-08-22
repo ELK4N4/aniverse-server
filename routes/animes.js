@@ -47,19 +47,14 @@ router.postAsync('/', async (req, res) => {
         return res.status(400).send('Anime already exist');
     }
 
-    try {
-        const savedAnime = await anime.save();
-        res.status(201).json(savedAnime);
-    } catch(err) {
-        res.status(400).send(err);
-    }
-
+    const savedAnime = await anime.save();
+    res.status(201).json(savedAnime);
 });
 
 //DELETE exist animes
 router.deleteAsync('/:animeId', async (req, res) => {
     const animeId = req.params.animeId;
-    const deletedAnime = await Anime.findOneAndRemove({ _id: animeId });
+    const deletedAnime = await Anime.findOneAndDelete({ _id: animeId });
     if (deletedAnime) {
         res.status(203).send(deletedAnime);
     }

@@ -1,7 +1,6 @@
 import { Router } from '@awaitjs/express';
 import Project from '../../models/Project.js';
 import Anime from '../../models/Anime.js';
-import verify from '../../middlewares/user-parser.js';
 
 const router = Router();
 
@@ -26,7 +25,7 @@ router.getAsync('/:projectId', async (req, res) => {
 });
 
 //POST new project
-router.postAsync('/', verify, async (req, res) => {
+router.postAsync('/', async (req, res) => {
     const anime = await Anime.findById({_id: req.body._id});
     if(!anime) {
         return res.status(400).send('Anime Not Exist');
@@ -49,7 +48,7 @@ router.postAsync('/', verify, async (req, res) => {
 });
 
 //DELETE project
-router.deleteAsync('/:projectId', verify, async (req, res) => {
+router.deleteAsync('/:projectId', async (req, res) => {
     const deletedProject = await Project.findByIdAndRemove({ _id: req.params.projectId });
     if (deletedProject) {
         return res.status(203).send(deletedProject);

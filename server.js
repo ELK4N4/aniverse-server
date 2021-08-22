@@ -10,7 +10,7 @@ import cors from 'cors';
 
 /* Import Routers */
 import indexRouter from './routes/index.js';
-import fansubsRouter from './routes/fansubs/index.js';
+import fansubsRouter from './routes/fansubs/fansub.js';
 import animesRouter from './routes/animes.js';
 import authRouter from './routes/auth/auth.js';
 import userRouter from './routes/user.js';
@@ -30,6 +30,7 @@ const limiter = rateLimit({
 // const isDevelopment = process.env.NODE_ENV === 'development';
 const isProduction = process.env.NODE_ENV === 'production';
 
+
 /* Server Setup */
 
 // Enable if you're behind a reverse proxy (Heroku, AWS ELB, Nginx, etc)
@@ -44,12 +45,6 @@ if(isProduction)
 }
 app.use(helmet());
 app.use(cors());
-app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-    next();
-});
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
@@ -70,8 +65,8 @@ mongoose.connect(
         if (err) return console.error(err);
         console.log('Mongoose is connected');
     },
-); // mongoose.set('useFindAndModify', false);
-    
+); 
+mongoose.set('useFindAndModify', false);
 //! MUST HANDLE PERMISSIONS
 
 /* Routes */
@@ -83,15 +78,14 @@ app.use('/animes', animesRouter);
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
 
+/* Error Handler */
 app.use((error, req, res, _next) => {
-    res.status(400).json({ error: error.message});
+    res.status(400).json({ error: error.message });
 });
-    
+
+
 /* Server Listening */
 app.listen(PORT, '0.0.0.0', () => {
     console.clear();
-    console.log(`Listening at port ${PORT}...`);
+    console.log(`\x1b[36mListening at port ${PORT}...`);
 });
-
-
-

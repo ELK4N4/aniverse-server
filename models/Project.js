@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+import Anime from './Anime.js';
+import Episode from './Episode.js';
+import Fansub from './Fansub.js';
 
 const projectSchema = new mongoose.Schema({
     anime: {
@@ -33,24 +36,18 @@ const projectSchema = new mongoose.Schema({
 
 projectSchema.post('save', async function(_savedDoc) {
     try {
-        await mongoose.model('Anime').findByIdAndUpdate({_id: this.anime}, { $addToSet: { projects: this._id } });
-        await mongoose.model('Fansub').findByIdAndUpdate({_id: this.fansub}, { $addToSet: { projects: this._id } });
+        await Anime.findByIdAndUpdate({_id: this.anime}, { $addToSet: { projects: this._id } });
+        await Fansub.findByIdAndUpdate({_id: this.fansub}, { $addToSet: { projects: this._id } });
     } catch(err) {
         console.log({err});
     }
 });
 
-projectSchema.post('findOneAndRemove', async function(doc) {
+projectSchema.post('findOneAndDelete', async function(doc) {
     try {
-        // const anime = await Anime.findById({_id: doc.anime});
-        // anime.projects = anime.projects.filter(project => !doc._id.equals(project));
-        // await Anime.findByIdAndUpdate({_id: doc.anime}, anime);
-        // const fansub = await Fansub.findById({_id: doc.fansub});
-        // fansub.projects = fansub.projects.filter(project => !doc._id.equals(project));
-        // await Fansub.findByIdAndUpdate({_id: doc.fansub}, fansub);
-        await mongoose.model('Anime').findByIdAndUpdate({_id: doc.anime}, { $pull: { projects: doc._id } });
-        await mongoose.model('Episode').deleteMany({ project: doc._id });
-        await mongoose.model('Fansub').findByIdAndUpdate({_id: doc.fansub}, { $pull: { projects: doc._id } });
+        await Anime.findByIdAndUpdate({_id: doc.anime}, { $pull: { projects: doc._id } });
+        await Episode.deleteMany({ project: doc._id });
+        await Fansub.findByIdAndUpdate({_id: doc.fansub}, { $pull: { projects: doc._id } });
     } catch(err) {
         console.log({err});
     }

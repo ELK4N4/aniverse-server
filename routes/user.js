@@ -10,6 +10,7 @@ router.getAsync('/', async (req, res) => {
 
 router.getAsync('/my-fansubs', async (req, res) => {
     const fansubs = await Fansub.find({ _id: { $in: req.user.memberInFansubs } });
+
     if(!fansubs) {
         return res.status(400).json({error: 'User doesn\'t member in a fansub'});
     }

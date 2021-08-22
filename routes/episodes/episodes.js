@@ -1,14 +1,13 @@
 import Episode from '../../models/Episode.js';
 import Project from '../../models/Project.js';
 import Anime from '../../models/Anime.js';
-import verify from '../../middlewares/user-parser.js';
 import { Router } from '@awaitjs/express';
 
 const router = Router();
 
 //GET all anime episodes
 router.getAsync('/', async (req, res) => {
-    const episodes = await Episode.find({anime: req.anime._id});
+    const episodes = await Episode.find({anime: req.anime._id}).populate('addedByFansub');
     // const projects = await Project.find({anime: req.anime._id});
     
     res.json(episodes);
@@ -29,7 +28,7 @@ router.getAsync('/:episodeId', async (req, res) => {
 });
 
 //POST new episodes
-router.postAsync('/', verify, async (req, res) => {
+router.postAsync('/', async (req, res) => {
     // TODO add check if user member in fansubId...
     const episodeExist = await Episode.findOne({number: req.body.number, addedByFansub: req.body.addedByFansub});
 
@@ -66,7 +65,7 @@ router.postAsync('/', verify, async (req, res) => {
 router.deleteAsync('/:episodeId', async (req, res) => {
     const episodeId = req.params.episodeId;
 
-    const deletedEpisode = await Episode.findOneAndRemove({ _id: episodeId });
+    const deletedEpisode = await Episode.findOneAndDelete({ _id: episodeId });
 
     if (deletedEpisode) {
         const anime = await Anime.findById({_id: req.anime._id});
@@ -83,17 +82,18 @@ router.deleteAsync('/:episodeId', async (req, res) => {
     res.status(401).send('Episode Not Found');
 });
 
+import commentsRouter from './comments.js';
 
-
-// /*** SPECIFIC EPISODES ***/
-
-
-// episodesRouter = require('./episodes');
-// router.use('/:project/', (req, res, next) => {
-//     const projectName = req.params.project.replace(/-/g," ");
-//     req.project = projectName;
-//     next();
-// }, episodesRouter);
-
+router.useAsync('/:episodeId/comments/', async (req, res, next) => {
+    const episode = await Episode.findById({_id: req.params.episodeId}).populate({
+        path: 'comments',
+        model: 'EpisodeComment'
+    });
+    if(!episode) {
+        return res.status(400).json({error: 'Fansub Not Exist'});
+    }
+    req.episode = episode;
+    next();
+}, commentsRouter);
 
 export default router;

@@ -63,7 +63,7 @@ episodeSchema.post('save', async function(_savedDoc) {
     }
 });
 
-episodeSchema.post('findOneAndRemove', async function(doc) {
+episodeSchema.post('findOneAndDelete', async function(doc) {
     try {
         await Project.findByIdAndUpdate({_id: doc.project}, { $pull: { episodes: doc._id } });
     } catch(err) {
