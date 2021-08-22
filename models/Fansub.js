@@ -34,17 +34,17 @@ const fansubSchema = new mongoose.Schema({
 //     }
 // });
 
-fansubSchema.post("findOneAndRemove", async function(doc) {
+fansubSchema.post('findOneAndRemove', async function(doc) {
     try {
         const usersArr = [];
         doc.members.forEach(member => {
             usersArr.push(member.userId);
-        })
-        await model('User').updateMany({ _id: { $in: usersArr }}, { $pull: { memberInFansubs: doc._id } });
-        const projects = await model('Project').find({ fansub: doc._id }); // TODO: get only IDs
+        });
+        await mongoose.model('User').updateMany({ _id: { $in: usersArr }}, { $pull: { memberInFansubs: doc._id } });
+        const projects = await mongoose.model('Project').find({ fansub: doc._id }); // TODO: get only IDs
         projects.forEach(async project => {
-            await model('Project').findOneAndRemove({ _id: project._id });
-        })
+            await mongoose.model('Project').findOneAndRemove({ _id: project._id });
+        });
     } catch(err) {
         console.log({err});
     }

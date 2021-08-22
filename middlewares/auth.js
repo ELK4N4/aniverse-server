@@ -7,7 +7,7 @@ function HasRole(role) {
         {
             return res.status(403).redirect('/');
         }
-    }
+    };
 }
 
 export default { HasRole };

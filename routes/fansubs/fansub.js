@@ -16,9 +16,9 @@ router.deleteAsync('/', async (req, res) => {
         return res.status(203).send(deletedFansub);
     }
 
-    console.log(deletedFansub)
+    console.log(deletedFansub);
 
-    res.status(401).send("Fansub Not Found");
+    res.status(401).send('Fansub Not Found');
 });
 
 
@@ -27,7 +27,7 @@ router.putAsync('/', async (req, res) => {
     const oldFansub = await Fansub.find({_id: req.fansub._id});
 
     if(!oldFansub) {
-        return res.status(403).send("Fansub Not Found");
+        return res.status(403).send('Fansub Not Found');
     }
     
     const fansubFields = {...oldFansub, ...req.body};
@@ -54,7 +54,7 @@ router.getAsync('/members', async (req, res) => {
 router.postAsync('/members/:username', async (req, res) => {
     const user = await User.findOne({username: req.params.username});
     if(!user) {
-        return res.status(403).send("Username Not Found");
+        return res.status(403).send('Username Not Found');
     }
 
     const newMember = {
@@ -66,7 +66,7 @@ router.postAsync('/members/:username', async (req, res) => {
             'episodes',
             'members',
         ]
-    }
+    };
 
     req.fansub.members.push(newMember);
     user.memberInFansubs.push(req.fansub._id);
@@ -83,7 +83,7 @@ router.putAsync('/members/:userId', async (req, res) => {
     const memberIndex = req.fansub.members.findIndex(member => member.userId.equals(req.params.userId));
     req.fansub.members[memberIndex].roles = req.body.roles;
     req.fansub.members[memberIndex].permissions = req.body.permissions;
-    const results = await req.fansub.save();
+    await req.fansub.save();
     res.send(req.fansub.members[memberIndex]);
 });
 

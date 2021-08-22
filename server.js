@@ -12,14 +12,11 @@ import cors from 'cors';
 import indexRouter from './routes/index.js';
 import fansubsRouter from './routes/fansubs/index.js';
 import animesRouter from './routes/animes.js';
-import loginRouter from './routes/login.js';
 import authRouter from './routes/auth/auth.js';
 import userRouter from './routes/user.js';
 import rateLimit  from 'express-rate-limit';
 
 dotenv.config();
-
-
 
 
 /* Constant Variables */
@@ -40,9 +37,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 // app.set('trust proxy', 1);
 
 app.use(morgan(isProduction ? 'combined' : 'dev'));
-app.use(function(err, req, res) {
-    res.status(400).json({ error: err.message});
-});
 
 if(isProduction)
 {
@@ -87,9 +81,11 @@ app.use('/', indexRouter);
 app.use('/fansubs', fansubsRouter);
 app.use('/animes', animesRouter);
 app.use('/user', userRouter);
-app.use('/login', loginRouter);
 app.use('/auth', authRouter);
-    
+
+app.use((error, req, res, _next) => {
+    res.status(400).json({ error: error.message});
+});
     
 /* Server Listening */
 app.listen(PORT, '0.0.0.0', () => {

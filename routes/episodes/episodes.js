@@ -18,7 +18,7 @@ router.getAsync('/', async (req, res) => {
 router.getAsync('/:episodeId', async (req, res) => {
     const episode = await Episode.findById({_id: req.params.episodeId}).populate('addedByFansub');
     if(!episode) {
-        return res.status(403).json({error: "Episode Not Found"});
+        return res.status(403).json({error: 'Episode Not Found'});
     }
 
     episode.views++;
@@ -80,7 +80,7 @@ router.deleteAsync('/:episodeId', async (req, res) => {
         return res.status(203).send(deletedEpisode);
     }
 
-    res.status(401).send("Episode Not Found");
+    res.status(401).send('Episode Not Found');
 });
 
 

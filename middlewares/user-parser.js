@@ -2,9 +2,9 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 const userParser = async (req,res,next) => {
-    const token = req.headers.authorization?.split(" ")[1];
+    const token = req.headers.authorization?.split(' ')[1];
     const guestUser = {
-        username: "אורח",
+        username: 'אורח',
         verified: false,
         role: 'guest'
     };
@@ -29,5 +29,5 @@ const userParser = async (req,res,next) => {
     } catch(err) {
         res.status(401).send('Invalid Token');
     }
-}
+};
 export default userParser;

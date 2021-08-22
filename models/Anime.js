@@ -14,7 +14,7 @@ const animeSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        default: "series"
+        default: 'series'
     },
     seasons: {
         type: Number,

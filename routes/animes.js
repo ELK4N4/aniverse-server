@@ -9,7 +9,7 @@ const router = Router();
 router.getAsync('/', async (req, res) => {
     let animes;
     if (req.query.search) {
-        animes = await Anime.find({ 'name.hebrew' : new RegExp('^' + req.query.search + '$', "i")});
+        animes = await Anime.find({ 'name.hebrew' : new RegExp('^' + req.query.search + '$', 'i')});
     } else {
         animes = await Anime.find();
     }
@@ -20,7 +20,7 @@ router.getAsync('/', async (req, res) => {
 router.getAsync('/:animeId', async (req, res) => {
     const anime = await Anime.findById({_id: req.params.animeId});
     if(!anime) {
-        return res.status(403).json({error: "Anime Not Found"});
+        return res.status(403).json({error: 'Anime Not Found'});
     }
     res.json(anime);
 });
@@ -64,7 +64,7 @@ router.deleteAsync('/:animeId', async (req, res) => {
         res.status(203).send(deletedAnime);
     }
 
-    res.status(401).send("Anime Not Found");
+    res.status(401).send('Anime Not Found');
 });
 
 
@@ -76,7 +76,7 @@ router.putAsync('/:animeId', async (req, res) => {
     const anime = await Anime.findOneAndUpdate({_id: animeId}, updatedAnime, {new: true});
 
     if(!anime){
-        return res.status(404).send("Anime Not Found");
+        return res.status(404).send('Anime Not Found');
     }
 
     res.status(200).send(anime);
@@ -90,7 +90,7 @@ import episodesRouter from './episodes/episodes.js';
 router.useAsync('/:animeId/episodes', async (req, res, next) => {
     const anime = await Anime.findById({_id: req.params.animeId});
     if(!anime) {
-        return res.status(403).json({error: "Anime Not Found"});
+        return res.status(403).json({error: 'Anime Not Found'});
     }
     req.anime = anime;
     next();

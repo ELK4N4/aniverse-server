@@ -14,7 +14,7 @@ router.getAsync('/', async (req, res) => {
 router.getAsync('/:episodeId', async (req, res) => {
     const episode = await Episode.findById({_id: req.params.episodeId});
     if(!episode) {
-        return res.status(403).json({error: "Episode Not Found"});
+        return res.status(403).json({error: 'Episode Not Found'});
     }
 
     res.status(200).send(episode);
@@ -49,20 +49,19 @@ router.postAsync('/', verify, async (req, res) => {
 //UPDATE exist animes
 router.putAsync('/:episodeId', async (req, res) => {
     const episodeId = req.params.episodeId;
-    console.log(episodeId)
 
     const oldEpisode = await Episode.findById({ _id: episodeId });
 
     if(!oldEpisode) {
-        return res.status(403).send("הפרק לא קיים");
+        return res.status(403).send('הפרק לא קיים');
     }
     
 
     if(oldEpisode.season !== req.body.season || oldEpisode.number !== req.body.number) {
         const dupCheck = await Episode.findOne({project: req.project._id, number: req.body.number , season: req.body.season });
-        console.log(dupCheck)
+
         if(dupCheck) {
-            return res.status(403).send("הפרק כבר קיים");
+            return res.status(403).send('הפרק כבר קיים');
         }
     }
 
@@ -81,7 +80,7 @@ router.deleteAsync('/:episodeId', async (req, res) => {
         return res.status(203).send(deletedEpisode);
     }
 
-    res.status(401).send("Episode Not Found");
+    res.status(401).send('Episode Not Found');
 });
 
 
