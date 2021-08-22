@@ -29,7 +29,7 @@ const animeSchema = new mongoose.Schema({
     },
     genre: {
         type: String
-    },    
+    },
     summary: {
         type: String
     },
@@ -43,7 +43,7 @@ const animeSchema = new mongoose.Schema({
     },
     projects: [{ 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Project' 
+        ref: 'Project'
     }]
 });
 
