@@ -33,7 +33,7 @@ router.putAsync('/:commentId', async (req, res) => {
     const comment = await EpisodeComment.findOneAndUpdate({_id: req.params.commentId}, {message: req.body.message}, {new: true}).populate({
         path: 'addedByUser',
         model: 'User',
-        select: 'username',
+        select: 'username profileImage',
     });
 
     if(!comment)

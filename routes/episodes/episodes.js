@@ -100,7 +100,7 @@ router.useAsync('/:episodeId/comments/', async (req, res, next) => {
         populate: { 
             path: 'addedByUser',
             model: 'User',
-            select: 'username',
+            select: 'username profileImage',
         }
 
     });
