@@ -24,11 +24,12 @@ router.postAsync('/', async (req, res) => {
     req.episode.comments.push(savedComment._id);
     await req.episode.save();
     
-    savedComment.addedByUser = {
+    const jsonComment = {...savedComment};
+    jsonComment.addedByUser = {
         _id: req.user._id,
         username: req.user.username
     }
-    res.status(201).json(savedComment);
+    res.status(201).json(jsonComment);
 
 });
 
