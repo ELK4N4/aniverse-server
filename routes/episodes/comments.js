@@ -29,7 +29,7 @@ router.postAsync('/', async (req, res) => {
         _id: req.user._id,
         username: req.user.username
     }
-    res.status(201).json(jsonComment);
+    res.status(201).json({jsonComment});
 
 });
 
