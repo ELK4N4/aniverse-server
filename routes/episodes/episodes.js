@@ -7,9 +7,18 @@ const router = Router();
 
 //GET all anime episodes
 router.getAsync('/', async (req, res) => {
-    const episodes = await Episode.find({anime: req.anime._id}).populate('addedByFansub');
-    // const projects = await Project.find({anime: req.anime._id});
+    let filter = {anime: req.anime._id};
+    if(req.query.fansubId) {
+        filter.addedByFansub = req.query.fansubId;
+    }
+
+    let episodes = await Episode.find(filter).populate('addedByFansub', 'name');
     
+    if(!req.query.recommended && !req.query.fansubId != !req.query.recommended)
+    {
+        // TODO organize by followers numbers.
+    }
+
     res.json(episodes);
 });
 
@@ -87,7 +96,13 @@ import commentsRouter from './comments.js';
 router.useAsync('/:episodeId/comments/', async (req, res, next) => {
     const episode = await Episode.findById({_id: req.params.episodeId}).populate({
         path: 'comments',
-        model: 'EpisodeComment'
+        model: 'EpisodeComment',
+        populate: { 
+            path: 'addedByUser',
+            model: 'User',
+            select: 'username',
+        }
+
     });
     if(!episode) {
         return res.status(400).json({error: 'Fansub Not Exist'});

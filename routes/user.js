@@ -4,7 +4,6 @@ import Fansub from '../models/Fansub.js';
 const router = Router();
 
 router.getAsync('/', async (req, res) => {
-    console.log(req.user);
     res.status(200).json(req.user);
 });
 

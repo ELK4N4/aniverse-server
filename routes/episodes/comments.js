@@ -30,7 +30,7 @@ router.postAsync('/', async (req, res) => {
 
 //UPDATE exist episode
 router.putAsync('/:commentId', async (req, res) => {
-    const comment = await EpisodeComment.findOneAndUpdate({_id: req.params.commentId}, {message: req.body.message});
+    const comment = await EpisodeComment.findOneAndUpdate({_id: req.params.commentId}, {message: req.body.message}, {new: true});
     if(!comment)
     {
         return res.status(404).send('comment not exists');
