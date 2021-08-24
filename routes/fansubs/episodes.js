@@ -22,7 +22,7 @@ router.getAsync('/:episodeId', async (req, res) => {
 //POST new episodes
 router.postAsync('/', async (req, res) => {
     // TODO add check if user member in fansubId...
-    const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id);
+    const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id});
     if(episodeExist) {
         return res.status(400).send('הפרק כבר קיים');
     }
