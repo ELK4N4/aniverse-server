@@ -8,10 +8,6 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Anime'
     },
-    season: {
-        type: Number,
-        default: 1
-    },
     fansub: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Fansub'

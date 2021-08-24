@@ -10,10 +10,6 @@ const episodeSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project'
     },
-    season: {
-        type: Number,
-        default: 1
-    },
     name: {
         type: String,
         require: true,

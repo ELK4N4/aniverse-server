@@ -22,7 +22,7 @@ router.getAsync('/:episodeId', async (req, res) => {
 //POST new episodes
 router.postAsync('/', async (req, res) => {
     // TODO add check if user member in fansubId...
-    const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id, season: req.body.season});
+    const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id);
     if(episodeExist) {
         return res.status(400).send('הפרק כבר קיים');
     }
@@ -34,7 +34,6 @@ router.postAsync('/', async (req, res) => {
         number: req.body.number,
         link: req.body.link,
         image: req.body.image,
-        season: req.body.season,
         post: req.body.post,
         addedByUser: req.user._id,
         addedByFansub: req.fansub._id
@@ -55,13 +54,10 @@ router.putAsync('/:episodeId', async (req, res) => {
         return res.status(403).send('הפרק לא קיים');
     }
     
+    const dupCheck = await Episode.findOne({project: req.project._id, number: req.body.number });
 
-    if(oldEpisode.season !== req.body.season || oldEpisode.number !== req.body.number) {
-        const dupCheck = await Episode.findOne({project: req.project._id, number: req.body.number , season: req.body.season });
-
-        if(dupCheck) {
-            return res.status(403).send('הפרק כבר קיים');
-        }
+    if(dupCheck) {
+        return res.status(403).send('הפרק כבר קיים');
     }
 
     const episodeFields = {oldEpisode, ...req.body};
