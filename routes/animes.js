@@ -35,7 +35,7 @@ router.postAsync('/', async (req, res) => {
         },
         summary: req.body.summary,
         episodesNumber: req.body.episodesNumber,
-        genre: req.body.genre,
+        genres: req.body.genres,
         image: req.body.image,
         addedByUser: req.user._id
     });

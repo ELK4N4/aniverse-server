@@ -23,8 +23,8 @@ const animeSchema = new mongoose.Schema({
     episodesNumber: {
         type: Number
     },
-    genre: {
-        type: String
+    genres: {
+        type: [String]
     },
     summary: {
         type: String
