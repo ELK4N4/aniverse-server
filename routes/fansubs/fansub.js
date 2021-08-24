@@ -33,7 +33,7 @@ router.postAsync('/', async (req, res) => {
         createdByUser: req.user._id,
         members: [{
             userId: req.user._id,
-            roles: ['admin'],
+            role: 'מנהל',
             permissions: [
                 'projects',
                 'fansub',
@@ -101,13 +101,8 @@ fansubRouter.postAsync('/members/:username', async (req, res) => {
 
     const newMember = {
         userId: user._id,
-        roles: ['member'],
-        permissions: [
-            'projects',
-            'fansub',
-            'episodes',
-            'members',
-        ]
+        role: 'חבר צוות',
+        permissions: []
     };
 
     req.fansub.members.push(newMember);
@@ -123,7 +118,7 @@ fansubRouter.postAsync('/members/:username', async (req, res) => {
 //UPDATE member
 fansubRouter.putAsync('/members/:userId', async (req, res) => {
     const memberIndex = req.fansub.members.findIndex(member => member.userId.equals(req.params.userId));
-    req.fansub.members[memberIndex].roles = req.body.roles;
+    req.fansub.members[memberIndex].role = req.body.role;
     req.fansub.members[memberIndex].permissions = req.body.permissions;
     await req.fansub.save();
     res.send(req.fansub.members[memberIndex]);

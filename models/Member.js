@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 const memberSchema = new mongoose.Schema({
-    roles: {
-        type: [String],
-        default: ['member']
+    role: {
+        type: String,
+        default: 'חבר צוות'
     },
     permissions: {
         type: [String],
