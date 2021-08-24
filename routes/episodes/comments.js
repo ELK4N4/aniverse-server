@@ -24,13 +24,14 @@ router.postAsync('/', async (req, res) => {
     req.episode.comments.push(savedComment._id);
     await req.episode.save();
     
-    const jsonComment = {...savedComment};
-    jsonComment.addedByUser = {
+    const commentsFields = JSON.parse(JSON.stringify(savedComment));
+    commentsFields.addedByUser = {
         _id: req.user._id,
-        username: req.user.username
-    }
-    res.status(201).json({jsonComment});
-
+        username: req.user.username,
+        profileImage: req.user.profileImage
+    };
+    
+    res.status(201).json(commentsFields);
 });
 
 //UPDATE exist episode
