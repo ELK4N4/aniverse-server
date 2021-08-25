@@ -18,7 +18,22 @@ router.getAsync('/', async (req, res) => {
 
 // GET anime
 router.getAsync('/:animeId', async (req, res) => {
-    const anime = await Anime.findById({_id: req.params.animeId});
+    const anime = await Anime.findById({_id: req.params.animeId}).populate({
+        path: 'projects',
+        model: 'Project',
+        select: 'episodes fansub',
+        populate: {
+            path: 'fansub',
+            model: 'Fansub',
+            select: 'name',
+        },
+        populate: {
+            path: 'episodes',
+            model: 'Episode',
+            select: 'number',
+        }
+    });
+
     if(!anime) {
         return res.status(403).json({error: 'Anime Not Found'});
     }

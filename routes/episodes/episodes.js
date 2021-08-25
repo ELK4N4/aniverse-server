@@ -24,7 +24,11 @@ router.getAsync('/', async (req, res) => {
 
 // GET episode
 router.getAsync('/:episodeId', async (req, res) => {
-    const episode = await Episode.findById({_id: req.params.episodeId}).populate('addedByFansub');
+    const episode = await Episode.findById({_id: req.params.episodeId}).populate({
+        path: 'addedByFansub',
+        model: 'Fansub',
+        select: 'name',
+    });
     if(!episode) {
         return res.status(403).json({error: 'Episode Not Found'});
     }
@@ -32,7 +36,6 @@ router.getAsync('/:episodeId', async (req, res) => {
     episode.views++;
     await episode.save();
 
-    episode.anime = req.anime;
     res.status(200).send(episode);
 });
 
