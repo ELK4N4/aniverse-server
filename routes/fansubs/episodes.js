@@ -53,7 +53,7 @@ router.putAsync('/:episodeId', async (req, res) => {
         return res.status(403).send('הפרק לא קיים');
     }
     
-    const dupCheck = await Episode.findOne({project: req.project._id, number: req.body.number });
+    const dupCheck = await Episode.findOne({project: req.project._id, number: req.body.number, addedByFansub: { "$ne": req.fansub._id }});
 
     if(dupCheck) {
         return res.status(403).send('הפרק כבר קיים');
