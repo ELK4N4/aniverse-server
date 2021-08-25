@@ -33,7 +33,6 @@ router.postAsync('/', async (req, res) => {
         name: req.body.name,
         number: req.body.number,
         link: req.body.link,
-        image: req.body.image,
         post: req.body.post,
         addedByUser: req.user._id,
         addedByFansub: req.fansub._id
