@@ -36,7 +36,11 @@ const userSchema = new mongoose.Schema({
     memberInFansubs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Fansub'
-    }]
+    }],
+    followsFansubs: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Fansub'
+    }],
 });
 
 export default mongoose.model('User', userSchema, 'Users');

@@ -24,17 +24,11 @@ const fansubSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Project' 
     }],
+    followers: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User' 
+    }],
 });
-
-// fansubSchema.post("save", async function(savedDoc) {
-//     try {
-//         const user = await User.findById({_id: this.createdByUser});
-//         user.memberInFansubs.push(this._id);
-//         await user.save();
-//     } catch(err) {
-//         console.log({err});
-//     }
-// });
 
 fansubSchema.post('findOneAndDelete', async function(doc) {
     try {
