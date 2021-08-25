@@ -37,7 +37,6 @@ router.postAsync('/', async (req, res) => {
             permissions: [
                 'projects',
                 'fansub',
-                'episodes',
                 'members',
             ]
         }]
