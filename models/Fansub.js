@@ -25,7 +25,7 @@ const fansubSchema = new mongoose.Schema({
         ref: 'Project' 
     }],
     followers: {
-        type: number,
+        type: Number,
         default: 0
     },
 });
