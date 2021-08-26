@@ -40,6 +40,7 @@ router.getAsync('/:animeId', async (req, res) => {
     }
 
     const animeWithRecommended = JSON.parse(JSON.stringify(anime));
+
     if(anime.projects.length > 1) {
         animeWithRecommended.recommended = anime.projects[0];
     }

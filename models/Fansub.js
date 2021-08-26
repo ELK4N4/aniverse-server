@@ -24,10 +24,10 @@ const fansubSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Project' 
     }],
-    followers: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User' 
-    }],
+    followers: {
+        type: number,
+        default: 0
+    },
 });
 
 fansubSchema.post('findOneAndDelete', async function(doc) {
