@@ -18,7 +18,7 @@ const userParser = async (req,res,next) => {
     try {
         const verified = jwt.verify(token, process.env.TOKEN_SECRET);
         try {
-            const user = await User.findOne({_id: verified.id});
+            const user = await User.findById({_id: verified.id});
             req.user = user;
             req.user.verified = true;
         } catch(err) {
