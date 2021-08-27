@@ -20,20 +20,13 @@ const fansubSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Project' 
     }],
-<<<<<<< HEAD
-    followers: [{ 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User' 
-    }],
-}, 
-{
-    timestamps: true,
-=======
     followers: {
         type: Number,
         default: 0
     },
->>>>>>> 63c42cffcc7e1d5700817561cd27602325935128
+}, 
+{
+    timestamps: true,
 });
 
 fansubSchema.post('findOneAndDelete', async function(doc) {
