@@ -15,7 +15,12 @@ fansubRouter.getAsync('', async (req, res) => {
 
 //GET all fansubs
 router.getAsync('/', async (req, res) => {
-    const fansubs = await Fansub.find();
+    let fansubs;
+    if (req.query.search) {
+        fansubs = await Fansub.find({ 'name' : new RegExp('^' + req.query.search + '$', 'i')});
+    } else {
+        fansubs = await Fansub.find();
+    }
     res.json(fansubs);
 });
 
