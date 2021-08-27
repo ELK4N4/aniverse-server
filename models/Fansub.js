@@ -11,10 +11,6 @@ const fansubSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
     image: {
         type: String,
         default: null
@@ -28,6 +24,9 @@ const fansubSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+}, 
+{
+    timestamps: true,
 });
 
 fansubSchema.post('findOneAndDelete', async function(doc) {

@@ -29,10 +29,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
     memberInFansubs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Fansub'
@@ -41,6 +37,9 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Fansub'
     }],
+}, 
+{
+    timestamps: true,
 });
 
 export default mongoose.model('User', userSchema, 'Users');

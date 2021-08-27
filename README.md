@@ -2,6 +2,10 @@
 
 A website for AnimePrime - Social Community For Anime
 
+### Disclaimer
+All uses of this system are on the user, I developed this system for self learning.
+I don't support any abuse of the system, or using it for illegal purposes.
+
 ### Design Pattern
 MVC
 
