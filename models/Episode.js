@@ -37,14 +37,13 @@ const episodeSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Fansub'
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
     comments: [{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'EpisodeComment' 
     }]
+}, 
+{
+    timestamps: true,
 });
 
 episodeSchema.post('save', async function(_savedDoc) {

@@ -29,10 +29,6 @@ const animeSchema = new mongoose.Schema({
     summary: {
         type: String
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
     image: {
         type: String,
         default: null
@@ -41,6 +37,9 @@ const animeSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Project'
     }]
+}, 
+{
+    timestamps: true,
 });
 
 export default mongoose.model('Anime', animeSchema, 'Animes');

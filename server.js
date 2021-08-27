@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import userParser from './middlewares/user-parser.js';
+import { userParser } from './middlewares/auth.js';
 import { addAsync } from '@awaitjs/express';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -44,14 +44,6 @@ if(isProduction)
     app.use(limiter);
 }
 
-
-// app.use(function (req, res, next) {
-//     setTimeout(function(){
-//         next()
-//     }, 2000);
-// });
-
-
 app.use(helmet());
 app.use(cors());
 app.use(express.urlencoded({extended: false}));
@@ -90,7 +82,7 @@ app.use('/auth', authRouter);
 
 /* Error Handler */
 app.use((error, req, res, _next) => {
-    console.log({ error: error.message })
+    console.log({ error: error.message });
     res.status(400).json({ error: error.message });
 });
 

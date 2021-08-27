@@ -20,14 +20,13 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
     episodes: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Episode' 
     }]
+}, 
+{
+    timestamps: true,
 });
 
 projectSchema.post('save', async function(_savedDoc) {
