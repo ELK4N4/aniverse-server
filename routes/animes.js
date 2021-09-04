@@ -25,7 +25,7 @@ router.getAsync('/:animeId', async (req, res) => {
         populate: [{
             path: 'fansub',
             model: 'Fansub',
-            select: 'name',
+            select: 'name followers',
         },
         {
             path: 'episodes',
@@ -39,10 +39,31 @@ router.getAsync('/:animeId', async (req, res) => {
         return res.status(403).json({error: 'Anime Not Found'});
     }
 
-    const animeWithRecommended = JSON.parse(JSON.stringify(anime));
+    const animeWithRecommended = anime.toJSON();
 
     if(anime.projects.length > 1) {
-        animeWithRecommended.recommended = anime.projects[0];
+        let episodesNumber = animeWithRecommended.projects.reduce(
+            (previousValue, currentProject) =>
+                Math.max(previousValue, currentProject.episodes.length) 
+            , 0);
+        let recommended = {};
+        recommended.episodes = [];
+        for(var i = 0; i < episodesNumber; i++)
+        {
+            let episode;
+            let followers = -1;
+            for(var p = 0; p < animeWithRecommended.projects.length; p++)
+            {
+                if(animeWithRecommended.projects[p].fansub.followers > followers && animeWithRecommended.projects[p].episodes[i])
+                {
+                    followers = animeWithRecommended.projects[p].fansub.followers;
+                    episode = animeWithRecommended.projects[p].episodes[i];
+                }
+            }
+            recommended.episodes.push(episode);
+        }
+        recommended.fansub = {_id: 'recommended', name: 'מומלץ'};
+        animeWithRecommended.projects.unshift(recommended);
     }
 
     res.status(203).json(animeWithRecommended);
