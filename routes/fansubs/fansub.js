@@ -82,11 +82,25 @@ fansubRouter.putAsync('', async (req, res) => {
     res.status(200).send(updatedFansub);
 });
 
+//GET members
+fansubRouter.postAsync('/followers', async (req, res) => {
+    if(req.user.followsFansubs.includes(req.fansub._id)){
+        return res.status(401).send('You are already following');
+    }
+    req.user.followsFansubs.push(req.fansub._id);
+    await req.user.save();
+    
+    req.fansub.followers++;
+    await req.fansub.save();
+
+    res.status(203).send('Following successfully');
+});
+
 ///MEMBERS///
 
 //GET members
 fansubRouter.getAsync('/members', async (req, res) => {
-    const members = JSON.parse(JSON.stringify(req.fansub.members));
+    const members = req.fansub.members.toObject();
     for (let i = 0; i < members.length; i++) {
         const user = await User.findById({_id: members[i].userId});
         members[i].user = user;
