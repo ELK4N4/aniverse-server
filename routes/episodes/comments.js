@@ -17,6 +17,7 @@ router.postAsync('/', async (req, res) => {
     const comment = new EpisodeComment({
         message: req.body.message,
         addedByUser: req.user._id,
+        replyTo: req.body.replyTo ?? null
     });
 
     const savedComment = await comment.save();
