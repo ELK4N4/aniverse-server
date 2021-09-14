@@ -84,10 +84,10 @@ fansubRouter.putAsync('', async (req, res) => {
 
 //GET members
 fansubRouter.postAsync('/followers', async (req, res) => {
-    if(req.user.followsFansubs.includes(req.fansub._id)){
+    if(req.user.followingFansubs.includes(req.fansub._id)){
         return res.status(401).send('You are already following');
     }
-    req.user.followsFansubs.push(req.fansub._id);
+    req.user.followingFansubs.push(req.fansub._id);
     await req.user.save();
     
     req.fansub.followers++;
@@ -162,6 +162,12 @@ fansubRouter.useAsync('/projects/', async (req, res, next) => {
 }, projectsRouter);
 
 
+/*** FOLLOWERS ***/
+import followersRouter from './followers.js';
+fansubRouter.useAsync('/followers/', async (req, res, next) => {
+    next();
+}, followersRouter);
+
 router.useAsync('/:fansubId/', async (req, res, next) => {
     const fansub = await Fansub.findById({_id: req.params.fansubId}).populate({
         path: 'projects',
@@ -177,5 +183,6 @@ router.useAsync('/:fansubId/', async (req, res, next) => {
     req.fansub = fansub;
     next();
 }, fansubRouter);
+
 
 export default router;
