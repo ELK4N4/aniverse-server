@@ -73,9 +73,9 @@ router.getAsync('/:animeId', async (req, res) => {
 router.postAsync('/', async (req, res) => {
     const anime = new Anime({
         name: {
-            hebrew: req.body.hebrewName,
-            english: req.body.englishName,
-            japanese: req.body.japaneseName,
+            hebrew: req.body.name.hebrew,
+            english: req.body.name.english,
+            japanese: req.body.name.japanese,
         },
         summary: req.body.summary,
         episodesNumber: req.body.episodesNumber,
