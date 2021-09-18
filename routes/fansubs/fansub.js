@@ -1,12 +1,9 @@
 import { Router } from '@awaitjs/express';
 import Fansub from '../../models/Fansub.js';
-import User from '../../models/User.js';
 
 const router = Router();
 // Will be prefixed with fansub id and fansub in request body
 const fansubRouter = Router({mergeParams: true});
-
-
 
 //GET fansub
 fansubRouter.getAsync('', async (req, res) => {
@@ -115,7 +112,7 @@ fansubRouter.useAsync('/members/', async (req, res, next) => {
 }, membersRouter);
 
 router.useAsync('/:fansubId/', async (req, res, next) => {
-    const fansub = await Fansub.findById({_id: req.params.fansubId}).populate({
+    const fansub = await Fansub.findById(req.params.fansubId).populate({
         path: 'projects',
         model: 'Project',
         populate: {

@@ -14,7 +14,7 @@ router.getAsync('/', async (req, res) => {
 });
 
 router.getAsync('/:projectId', async (req, res) => {
-    const project = await Project.findById({_id: req.params.projectId}).populate({
+    const project = await Project.findById(req.params.projectId).populate({
         path: 'episodes',
         model: 'Episode',
     });
@@ -26,7 +26,7 @@ router.getAsync('/:projectId', async (req, res) => {
 
 //POST new project
 router.postAsync('/', async (req, res) => {
-    const anime = await Anime.findById({_id: req.body._id});
+    const anime = await Anime.findById(req.body._id);
     if(!anime) {
         return res.status(400).send('Anime Not Exist');
     }
@@ -49,7 +49,7 @@ router.postAsync('/', async (req, res) => {
 
 //DELETE project
 router.deleteAsync('/:projectId', async (req, res) => {
-    const deletedProject = await Project.findByIdAndRemove({ _id: req.params.projectId });
+    const deletedProject = await Project.findByIdAndRemove(req.params.projectId);
     if (deletedProject) {
         return res.status(203).send(deletedProject);
     }
@@ -60,7 +60,7 @@ router.deleteAsync('/:projectId', async (req, res) => {
 /*** EPISODES ***/
 import episodesRouter from './episodes.js';
 router.useAsync('/:projectId/episodes/', async (req, res, next) => {
-    const project = await Project.findById({_id: req.params.projectId}).populate({
+    const project = await Project.findById(req.params.projectId).populate({
         path: 'episodes',
         model: 'Episode',
     });

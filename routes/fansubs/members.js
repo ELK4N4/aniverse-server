@@ -7,7 +7,7 @@ const router = Router();
 router.getAsync('/', async (req, res) => {
     const members = req.fansub.members.toObject();
     for (let i = 0; i < members.length; i++) {
-        const user = await User.findById({_id: members[i].userId});
+        const user = await User.findById(members[i].userId);
         members[i].user = user;
         delete members[i].userId;
     }
@@ -52,7 +52,7 @@ router.deleteAsync('/:userId', async (req, res) => {
     req.fansub.members = req.fansub.members.filter(member => !member.userId.equals(req.params.userId));
     await req.fansub.save();
 
-    const user = await User.findById({_id: req.params.userId});
+    const user = await User.findById(req.params.userId);
     user.memberInFansubs = user.memberInFansubs.filter(fansub => !fansub._id.equals(req.fansub._id));
     await user.save();
 

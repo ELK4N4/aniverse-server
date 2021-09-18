@@ -11,7 +11,7 @@ router.getAsync('/', async (req, res) => {
 
 // GET episode
 router.getAsync('/:episodeId', async (req, res) => {
-    const episode = await Episode.findById({_id: req.params.episodeId});
+    const episode = await Episode.findById(req.params.episodeId);
     if(!episode) {
         return res.status(403).json({error: 'Episode Not Found'});
     }
@@ -47,7 +47,7 @@ router.postAsync('/', async (req, res) => {
 router.putAsync('/:episodeId', async (req, res) => {
     const episodeId = req.params.episodeId;
 
-    const oldEpisode = await Episode.findById({ _id: episodeId });
+    const oldEpisode = await Episode.findById(episodeId);
 
     if(!oldEpisode) {
         return res.status(403).send('הפרק לא קיים');

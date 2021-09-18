@@ -1,6 +1,6 @@
 import { Router } from '@awaitjs/express';
-import Fansub from '../models/Fansub.js';
-import User from '../models/User.js';
+import Fansub from '../../models/Fansub.js';
+import User from '../../models/User.js';
 
 const router = Router();
 
@@ -18,7 +18,8 @@ router.getAsync('/my-fansubs', async (req, res) => {
 });
 
 router.getAsync('/:userId', async (req, res) => {
-    const user = await User.findById({_id: req.params.userId});
+    // TODO validate params
+    const user = await User.findById(req.params.userId);
     res.status(200).json(user);
 });
 

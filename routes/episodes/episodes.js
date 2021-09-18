@@ -24,7 +24,7 @@ router.getAsync('/', async (req, res) => {
 
 // GET episode
 router.getAsync('/:episodeId', async (req, res) => {
-    const episode = await Episode.findById({_id: req.params.episodeId}).populate({
+    const episode = await Episode.findById(req.params.episodeId).populate({
         path: 'addedByFansub',
         model: 'Fansub',
         select: 'name',
@@ -60,13 +60,13 @@ router.postAsync('/', async (req, res) => {
 
     const savedEpisode = await episode.save();
 
-    const anime = await Anime.findById({_id: req.anime._id});
+    const anime = await Anime.findById(req.anime._id);
     anime.episodes.push(savedEpisode._id);
-    await Anime.findByIdAndUpdate({_id: req.anime._id}, anime);
+    await Anime.findByIdAndUpdate(req.anime._id, anime);
 
-    const project = await Project.findOne({anime: req.anime._id});
+    const project = await Project.findOne(req.anime._id);
     project.episodes.push(savedEpisode._id);
-    await Project.findOneAndUpdate({anime: req.anime._id}, project);
+    await Project.findOneAndUpdate(req.anime._id, project);
         
     res.status(201).json(savedEpisode);
 
@@ -79,9 +79,9 @@ router.deleteAsync('/:episodeId', async (req, res) => {
     const deletedEpisode = await Episode.findOneAndDelete({ _id: episodeId });
 
     if (deletedEpisode) {
-        const anime = await Anime.findById({_id: req.anime._id});
+        const anime = await Anime.findById(req.anime._id);
         anime.episodes = anime.episodes.filter(episode => episode._id.toString() !== deletedEpisode._id.toString());
-        await Anime.findByIdAndUpdate({_id: req.anime._id}, anime);
+        await Anime.findByIdAndUpdate(req.anime._id, anime);
 
         const project = await Project.findOne({anime: req.anime._id});
         project.episodes = project.episodes.filter(episode => episode._id.toString() !== deletedEpisode._id.toString());
@@ -96,7 +96,7 @@ router.deleteAsync('/:episodeId', async (req, res) => {
 import commentsRouter from './comments.js';
 
 router.useAsync('/:episodeId/comments/', async (req, res, next) => {
-    const episode = await Episode.findById({_id: req.params.episodeId}).populate({
+    const episode = await Episode.findById(req.params.episodeId).populate({
         path: 'comments',
         model: 'EpisodeComment',
         populate: { 
