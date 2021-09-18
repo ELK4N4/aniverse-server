@@ -14,6 +14,16 @@ router.getAsync('/', async (req, res) => {
 //POST new comment
 router.postAsync('/', async (req, res) => {
 
+    // Check if there is a reply and if it on same episode
+    if(req.body.replyTo)
+    {
+        const replyComment = (await EpisodeComment.findById(req.body.replyTo));
+        if(!replyComment || !req.episode.comments.filter(comment => comment._id == replyComment._id))
+        {
+            req.body.replyTo = null;
+        }
+    }
+    
     const comment = new EpisodeComment({
         message: req.body.message,
         addedByUser: req.user._id,
@@ -25,7 +35,7 @@ router.postAsync('/', async (req, res) => {
     req.episode.comments.push(savedComment._id);
     await req.episode.save();
     
-    const commentsFields = JSON.parse(JSON.stringify(savedComment));
+    const commentsFields = savedComment.toJSON();
     commentsFields.addedByUser = {
         _id: req.user._id,
         username: req.user.username,
