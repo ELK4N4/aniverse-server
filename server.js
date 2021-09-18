@@ -10,7 +10,7 @@ import cors from 'cors';
 
 /* Import Routers */
 import indexRouter from './routes/index.js';
-import fansubsRouter from './routes/fansubs/fansub.js';
+import fansubsRouter from './routes/fansubs/index.js';
 import animesRouter from './routes/animes.js';
 import authRouter from './routes/auth/auth.js';
 import userRouter from './routes/users/user.js';
