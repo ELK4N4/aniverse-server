@@ -17,10 +17,4 @@ router.getAsync('/my-fansubs', async (req, res) => {
     res.status(200).json(fansubs);
 });
 
-router.getAsync('/:userId', async (req, res) => {
-    // TODO validate params
-    const user = await User.findById(req.params.userId);
-    res.status(200).json(user);
-});
-
 export default router;

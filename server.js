@@ -14,7 +14,7 @@ import fansubsRouter from './routes/fansubs/index.js';
 import animesRouter from './routes/animes.js';
 import authRouter from './routes/auth/auth.js';
 import userRouter from './routes/users/user.js';
-import usersRouter from './routes/users/index.js';
+import usersRouter from './routes/users/users.js';
 import rateLimit  from 'express-rate-limit';
 
 dotenv.config();
