@@ -33,7 +33,6 @@ router.postAsync('/register', async (req, res) => {
     if(emailExist) {
         return res.status(400).send('Email already exist');
     }
-
     let regexName =  `^${req.body.username}$`;
     const usernameExist = await User.findOne( {username: { $regex: regexName, $options:'i' } }); //Check if the username is exist with ignoring case sensitive
 
@@ -42,7 +41,8 @@ router.postAsync('/register', async (req, res) => {
     }
 
     //Hash Password
-    const hashedPassword = await bcrypt.hash(req.body.password);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
     
     const user = new User({
         username: req.body.username,
