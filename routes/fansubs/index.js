@@ -26,7 +26,7 @@ router.postAsync('/', async (req, res) => {
 
     const fansub = new Fansub({
         name: req.body.name,
-        image: req.body.image,
+        avatar: req.body.avatar,
         createdByUser: req.user._id,
         members: [{
             userId: req.user._id,

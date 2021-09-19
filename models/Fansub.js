@@ -11,7 +11,7 @@ const fansubSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    image: {
+    avatar: {
         type: String,
         default: null
     },
