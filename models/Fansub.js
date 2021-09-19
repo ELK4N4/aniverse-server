@@ -15,6 +15,10 @@ const fansubSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    banner: {
+        type: String,
+        default: null
+    },
     members: [memberSchema],
     projects: [{ 
         type: mongoose.Schema.Types.ObjectId, 

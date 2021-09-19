@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null
     },
+    banner: {
+        type: String,
+        default: null
+    },
     memberInFansubs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Fansub'
