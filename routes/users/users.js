@@ -18,9 +18,4 @@ router.putAsync('/:userId', async (req, res) => {
     res.status(200).json(user);
 });
 
-router.deleteAsync('/:userId', async (req, res) => {
-    const user = await User.findByIdAndRemove(req.params.userId);
-    res.status(200).json(user);
-});
-
 export default router;
