@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: null
     },
-    profileImage: {
+    avatar: {
         type: String,
         default: null
     },

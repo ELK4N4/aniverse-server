@@ -39,7 +39,7 @@ router.postAsync('/', async (req, res) => {
     commentsFields.addedByUser = {
         _id: req.user._id,
         username: req.user.username,
-        profileImage: req.user.profileImage
+        avatar: req.user.avatar
     };
     
     res.status(201).json(commentsFields);
@@ -50,7 +50,7 @@ router.putAsync('/:commentId', async (req, res) => {
     const comment = await EpisodeComment.findOneAndUpdate({_id: req.params.commentId}, {message: req.body.message}, {new: true}).populate({
         path: 'addedByUser',
         model: 'User',
-        select: 'username profileImage',
+        select: 'username avatar',
     });
 
     if(!comment)
