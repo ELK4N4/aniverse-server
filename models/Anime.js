@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Project from './Project.js';
 
 const animeSchema = new mongoose.Schema({
     name: {
@@ -40,6 +41,14 @@ const animeSchema = new mongoose.Schema({
 }, 
 {
     timestamps: true,
+});
+
+animeSchema.post('findOneAndDelete', async function(doc) {
+    try {
+        await Project.findOneAndDelete({anime: doc._id});
+    } catch(err) {
+        console.log({err});
+    }
 });
 
 export default mongoose.model('Anime', animeSchema, 'Animes');

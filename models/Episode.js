@@ -48,7 +48,7 @@ const episodeSchema = new mongoose.Schema({
 
 episodeSchema.post('save', async function(_savedDoc) {
     try {
-        await Project.findByIdAndUpdate({_id: this.project}, { $addToSet: { episodes: this._id } });
+        await Project.findByIdAndUpdate(this.project, { $addToSet: { episodes: this._id } });
     } catch(err) {
         console.log({err});
     }
@@ -56,7 +56,7 @@ episodeSchema.post('save', async function(_savedDoc) {
 
 episodeSchema.post('findOneAndDelete', async function(doc) {
     try {
-        await Project.findByIdAndUpdate({_id: doc.project}, { $pull: { episodes: doc._id } });
+        await Project.findByIdAndUpdate(doc.project, { $pull: { episodes: doc._id } });
     } catch(err) {
         console.log({err});
     }
