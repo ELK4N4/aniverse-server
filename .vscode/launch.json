@@ -8,10 +8,11 @@
             "type": "pwa-node",
             "request": "launch",
             "name": "Launch Program",
+            "runtimeExecutable": "node",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${file}"
+            "program": "${workspaceFolder}/server.js"
         }
     ]
 }

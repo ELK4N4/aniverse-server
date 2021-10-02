@@ -1,6 +1,5 @@
 import { Router } from '@awaitjs/express';
 import Fansub from '../../models/Fansub.js';
-import User from '../../models/User.js';
 
 const router = Router();
 

@@ -44,7 +44,8 @@ router.getAsync('/:animeId', async (req, res) => {
     if(anime.projects.length > 1) {
         let episodesNumber = animeWithRecommended.projects.reduce(
             (previousValue, currentProject) =>
-                Math.max(previousValue, currentProject.episodes.length) 
+                Math.max(previousValue, Math.max.apply(Math, currentProject.episodes.map(function(o) { return o.number; }))
+                ) 
             , 0);
         let recommended = {};
         recommended.episodes = [];
@@ -54,10 +55,11 @@ router.getAsync('/:animeId', async (req, res) => {
             let followers = -1;
             for(var p = 0; p < animeWithRecommended.projects.length; p++)
             {
-                if(animeWithRecommended.projects[p].fansub.followers > followers && animeWithRecommended.projects[p].episodes[i])
+                const projectEpisode = animeWithRecommended.projects[p].episodes.filter((episode) => episode && episode.number == i + 1)[0];
+                if(animeWithRecommended.projects[p].fansub.followers > followers && projectEpisode)
                 {
                     followers = animeWithRecommended.projects[p].fansub.followers;
-                    episode = animeWithRecommended.projects[p].episodes[i];
+                    episode = projectEpisode;
                 }
             }
             recommended.episodes.push(episode);
