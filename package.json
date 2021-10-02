@@ -37,7 +37,8 @@
     "mongoose": "^5.13.9",
     "morgan": "^1.10.0",
     "mpath": "^0.8.4",
-    "nodemailer": "^6.6.3"
+    "nodemailer": "^6.6.3",
+    "ansi-regex": ">=5.0.1"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
