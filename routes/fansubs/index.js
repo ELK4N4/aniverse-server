@@ -8,10 +8,12 @@ const router = Router();
 //GET all fansubs
 router.getAsync('/', async (req, res) => {
     let fansubs;
+    const skip = +req.query.skip ?? 0;
+    const limit = +req.query.limit ?? 50;
     if (req.query.search) {
-        fansubs = await Fansub.find({ 'name' : new RegExp('^' + req.query.search + '$', 'i')});
+        fansubs = await Fansub.find({ 'name' : new RegExp('^' + req.query.search + '$', 'i')}).sort({'followers': -1}).limit(limit).skip(skip);
     } else {
-        fansubs = await Fansub.find();
+        fansubs = await Fansub.find().sort({'followers': -1}).limit(limit).skip(skip);
     }
     res.json(fansubs);
 });
