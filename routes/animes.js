@@ -8,10 +8,12 @@ const router = Router();
 //GET all animes
 router.getAsync('/', async (req, res) => {
     let animes;
+    const skip = +req.query.skip ?? 0;
+    const limit = +req.query.limit ?? 50;
     if (req.query.search) {
-        animes = await Anime.find({ 'name.hebrew' : new RegExp('^' + req.query.search + '$', 'i')});
+        animes = await Anime.find({ 'name.hebrew' : new RegExp('^' + req.query.search + '$', 'i')}).sort({'createdAt': -1}).limit(limit).skip(skip);
     } else {
-        animes = await Anime.find();
+        animes = await Anime.find().sort({'createdAt': -1}).limit(limit).skip(skip);
     }
     res.json(animes);
 });
