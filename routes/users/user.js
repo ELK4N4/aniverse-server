@@ -1,5 +1,6 @@
 import { Router } from '@awaitjs/express';
 import Fansub from '../../models/Fansub.js';
+import User from '../../models/User.js';
 
 const router = Router();
 
@@ -8,6 +9,10 @@ router.getAsync('/', async (req, res) => {
 });
 
 router.putAsync('/', async (req, res) => {
+    if(req.body.password.length === 0) {
+        delete req.body.password;
+    }
+
     const user = await User.findByIdAndUpdate(req.user._id, req.body, {new: true});
     res.status(200).json(user);
 });
