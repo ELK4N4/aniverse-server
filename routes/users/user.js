@@ -9,13 +9,15 @@ router.getAsync('/', async (req, res) => {
 });
 
 router.putAsync('/', async (req, res) => {
-    if(req.body.password.length === 0) {
-        delete req.body.password;
-    } else {
-        //Hash Password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
-        req.body.password = hashedPassword;
+    if(req.body.password) {
+        if(req.body.password.length === 0) {
+            delete req.body.password;
+        } else {
+            //Hash Password
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(req.body.password, salt);
+            req.body.password = hashedPassword;
+        }
     }
 
     const user = await User.findByIdAndUpdate(req.user._id, req.body, {new: true});
