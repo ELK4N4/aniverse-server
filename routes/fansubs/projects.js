@@ -57,6 +57,16 @@ router.deleteAsync('/:projectId', async (req, res) => {
     res.status(401).send('Project Not Found');
 });
 
+//PUT project status
+router.putAsync('/:projectId/status', async (req, res) => {
+    const updatedProjectStatus = await Project.findByIdAndUpdate(req.params.projectId, {status: req.body.status}).populate('anime');
+    if (updatedProjectStatus) {
+        return res.status(203).send(updatedProjectStatus);
+    }
+
+    res.status(401).send('Project Not Found');
+});
+
 /*** EPISODES ***/
 import episodesRouter from './episodes.js';
 router.useAsync('/:projectId/episodes/', async (req, res, next) => {
