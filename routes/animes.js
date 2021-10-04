@@ -64,7 +64,8 @@ router.getAsync('/:animeId', async (req, res) => {
                     episode = projectEpisode;
                 }
             }
-            recommended.episodes.push(episode);
+            if(episode)
+                recommended.episodes.push(episode);
         }
         recommended.fansub = {_id: 'recommended', name: 'מומלץ'};
         animeWithRecommended.projects.unshift(recommended);
