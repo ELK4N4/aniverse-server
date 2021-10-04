@@ -59,7 +59,8 @@ router.deleteAsync('/:projectId', async (req, res) => {
 
 //PUT project status
 router.putAsync('/:projectId/status', async (req, res) => {
-    const updatedProjectStatus = await Project.findByIdAndUpdate(req.params.projectId, {status: req.body.status}).populate('anime');
+    console.log(req.body)
+    const updatedProjectStatus = await Project.findByIdAndUpdate(req.params.projectId, {status: req.body.status}, {new: true}).populate('anime');
     if (updatedProjectStatus) {
         return res.status(203).send(updatedProjectStatus);
     }
