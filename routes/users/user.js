@@ -7,6 +7,11 @@ router.getAsync('/', async (req, res) => {
     res.status(200).json(req.user);
 });
 
+router.putAsync('/', async (req, res) => {
+    const user = await User.findByIdAndUpdate(req.user._id, req.body, {new: true});
+    res.status(200).json(user);
+});
+
 router.getAsync('/my-fansubs', async (req, res) => {
     const fansubs = await Fansub.find({ _id: { $in: req.user.memberInFansubs } });
 
