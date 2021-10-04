@@ -1,4 +1,5 @@
 import { Router } from '@awaitjs/express';
+import bcrypt from 'bcryptjs';
 import Fansub from '../../models/Fansub.js';
 import User from '../../models/User.js';
 
