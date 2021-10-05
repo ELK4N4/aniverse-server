@@ -41,6 +41,15 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Fansub'
     }],
+    verified: {
+        type: Boolean,
+        default: false
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        // expires: '5m',
+    }
 }, 
 {
     timestamps: true,
