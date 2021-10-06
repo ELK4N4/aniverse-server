@@ -60,8 +60,7 @@ router.putAsync('/:episodeId', async (req, res) => {
     }
 
     const episodeFields = {oldEpisode, ...req.body};
-    const updatedEpisode = await Episode.findOneAndUpdate({_id: episodeId}, episodeFields, {new: true});
-
+    const updatedEpisode = await Episode.findByIdAndUpdate(episodeId, episodeFields, {new: true});
     res.status(200).send(updatedEpisode);
 });
 
