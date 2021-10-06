@@ -27,11 +27,11 @@ const userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: null
+        default: ''
     },
     banner: {
         type: String,
-        default: null
+        default: ''
     },
     memberInFansubs: [{
         type: mongoose.Schema.Types.ObjectId,

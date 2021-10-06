@@ -32,7 +32,7 @@ const animeSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        default: null
+        default: ''
     },
     projects: [{ 
         type: mongoose.Schema.Types.ObjectId, 

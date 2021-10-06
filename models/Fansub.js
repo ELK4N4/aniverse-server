@@ -13,15 +13,15 @@ const fansubSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: null
+        default: ''
     },
     banner: {
         type: String,
-        default: null
+        default: ''
     },
     website: {
         type: String,
-        default: null
+        default: ''
     },
     members: [memberSchema],
     projects: [{ 
