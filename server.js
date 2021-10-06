@@ -46,7 +46,7 @@ if(isProduction)
 }
 
 app.use(helmet());
-app.use(cors());
+app.use(cors({exposedHeaders: 'Content-Range'}));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
