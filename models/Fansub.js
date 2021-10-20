@@ -26,7 +26,7 @@ const fansubSchema = new mongoose.Schema({
     members: [memberSchema],
     projects: [{ 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Project' 
+        ref: 'Project'
     }],
     followers: {
         type: Number,
@@ -39,7 +39,6 @@ const fansubSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        // expires: '5m',
     }
 }, 
 {

@@ -1,5 +1,7 @@
 import { Router } from '@awaitjs/express';
 import Anime from '../models/Anime.js';
+import Rating from '../models/Rating.js';
+import mongoose from 'mongoose';
 
 const router = Router();
 
@@ -69,6 +71,7 @@ router.getAsync('/:animeId', async (req, res) => {
         }
         recommended.fansub = {_id: 'recommended', name: 'מומלץ'};
         animeWithRecommended.projects.unshift(recommended);
+        animeWithRecommended.rating = await anime.getRating(req.user?._id);
     }
 
     res.status(203).json(animeWithRecommended);
@@ -124,6 +127,96 @@ router.putAsync('/:animeId', async (req, res) => {
 
     res.status(200).send(anime);
 });
+
+
+//GET anime rating
+router.getAsync('/:animeId/rating', async (req, res) => {
+    const animeId = req.params.animeId;
+
+    const anime = await Anime.findById(animeId);
+
+    if(!anime){
+        return res.status(404).send('Anime Not Found');
+    }
+
+    const score = await Rating.aggregate([
+        { $match: { animeId: mongoose.Types.ObjectId(animeId) } },
+        { $group: {
+            _id: "$animeId",
+            avg: { $avg: "$score" },
+        }},
+    ]);
+    res.status(200).json({score: score[0].avg});
+});
+
+
+//POST animes rating
+router.postAsync('/:animeId/rating', async (req, res) => {
+    const animeId = req.params.animeId;
+    const score = req.body.score;
+
+    const anime = await Anime.findById(animeId);
+
+    if(!anime){
+        return res.status(404).send('Anime Not Found');
+    }
+
+    const userRating = await Rating.findOne({userId: req.user._id, animeId});
+
+    if(userRating) {
+        return res.status(404).send('Use PUT instead of get...');
+    }
+
+    const rating = new Rating({
+        userId: req.user._id,
+        animeId,
+        score
+    });
+
+    await rating.save();
+    const ratingScore = await anime.getRating(req.user._id);
+    res.status(200).json(ratingScore);
+});
+
+//PUT animes rating
+router.putAsync('/:animeId/rating/:ratingId', async (req, res) => {
+    const animeId = req.params.animeId;
+    const anime = await Anime.findById(animeId);
+
+    if(!anime){
+        return res.status(404).send('Anime Not Found');
+    }
+
+    const userRating = await Rating.findByIdAndUpdate(req.params.ratingId, {score: req.body.score}, {new: true});
+
+    if(!userRating) {
+        return res.status(404).send('Use POST instead of get...');
+    }
+
+    const score = await anime.getRating(req.user._id);
+    res.status(200).json(score);
+});
+
+//DELETE animes rating
+router.deleteAsync('/:animeId/rating/:ratingId', async (req, res) => {
+    const animeId = req.params.animeId;
+    const anime = await Anime.findById(animeId);
+
+    if(!anime){
+        return res.status(404).send('Anime Not Found');
+    }
+
+    const userRating = await Rating.findByIdAndRemove(req.params.ratingId);
+
+    if(!userRating) {
+        return res.status(404).send('Use POST instead of get...');
+    }
+
+    const score = await anime.getRating();
+
+    res.status(200).json(score);
+});
+
 
 
 

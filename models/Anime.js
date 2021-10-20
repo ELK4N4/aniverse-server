@@ -43,6 +43,29 @@ const animeSchema = new mongoose.Schema({
     timestamps: true,
 });
 
+animeSchema.method('getRating', async function (userId) {
+    const score = await mongoose.model('Rating').aggregate([
+        { $match: { animeId: mongoose.Types.ObjectId(this._id) } },
+        { $group: {
+            _id: "$animeId",
+            avg: { $avg: "$score" },
+        }},
+    ]);
+
+    const rating = {}
+
+    if(score.length > 0) {
+        rating.avg = score[0].avg;
+
+        if(userId) {
+            const userRating = await mongoose.model('Rating').findOne({animeId: this._id, userId });
+            rating.userRating = userRating;
+        }
+    }
+   
+    return rating;
+})
+
 animeSchema.post('findOneAndDelete', async function(doc) {
     try {
         await Project.findOneAndDelete({anime: doc._id});

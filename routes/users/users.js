@@ -5,6 +5,8 @@ const router = Router();
 
 router.getAsync('/', async (req, res) => {
     const users = await User.find().lean();
+    console.log(users)
+    res.header('Content-Range', 'users 0-24/319');
     res.status(200).json(users);
 });
 
