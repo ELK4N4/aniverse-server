@@ -17,7 +17,11 @@ router.getAsync('/', async (req, res) => {
     } else {
         animes = await Anime.find().sort({'createdAt': -1}).limit(limit).skip(skip);
     }
-    res.json(animes);
+    const animesWithRating = JSON.parse(JSON.stringify(animes));
+    for (let index = 0; index < animesWithRating.length; index++) {
+        animesWithRating[index].rating = await animes[index].getRating();
+    }
+    res.json(animesWithRating);
 });
 
 // GET anime
