@@ -48,7 +48,8 @@ router.getAsync('/:animeId', async (req, res) => {
     }
 
     const animeWithRecommended = anime.toJSON();
-
+    animeWithRecommended.rating = await anime.getRating(req.user?._id);
+    
     if(anime.projects.length > 1) {
         let episodesNumber = animeWithRecommended.projects.reduce(
             (previousValue, currentProject) =>
@@ -70,12 +71,14 @@ router.getAsync('/:animeId', async (req, res) => {
                     episode = projectEpisode;
                 }
             }
-            if(episode)
+            if(episode) {
                 recommended.episodes.push(episode);
+            }
         }
+
+
         recommended.fansub = {_id: 'recommended', name: 'מומלץ'};
         animeWithRecommended.projects.unshift(recommended);
-        animeWithRecommended.rating = await anime.getRating(req.user?._id);
     }
 
     res.status(203).json(animeWithRecommended);
