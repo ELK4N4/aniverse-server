@@ -10,7 +10,11 @@ router.getAsync('/', async (req, res) => {
     if(!projects) {
         return res.status(400).send('Projects Not Exist');
     }
-    res.json(projects);
+    const projectsWithRating = JSON.parse(JSON.stringify(projects));
+    for (let index = 0; index < projects.length; index++) {
+        projectsWithRating[index].anime.rating = await projects[index].anime.getRating();
+    }
+    res.json(projectsWithRating);
 });
 
 router.getAsync('/:projectId', async (req, res) => {
