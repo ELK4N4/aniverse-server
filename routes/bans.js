@@ -26,7 +26,7 @@ router.postAsync('/:username', async (req, res) => {
     }
     const ban = new Ban({
         user: userExist._id,
-        expired: req.body.expired,
+        expire: req.body.expire,
         reason: req.body.reason,
     });
     const savedBan = await ban.save();

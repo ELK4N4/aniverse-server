@@ -5,11 +5,15 @@ const banSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    expired: {
+    expire: {
         type: Date,
     },
     reason: {
         type: String,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
     }
 });
 
