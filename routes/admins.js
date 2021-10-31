@@ -4,35 +4,36 @@ import User from '../models/User.js';
 const router = Router();
 
 router.getAsync('/', async (req, res) => {
-    const users = await User.find({role: {$ne: null}});
-    console.log(users)
+    const admins = await User.find({role: {$ne: null}});
     res.header('Content-Range', 'users 0-24/319');
-    res.status(200).json(users);
+    res.status(200).json(admins);
 });
 
 router.getAsync('/:userId', async (req, res) => {
-    const user = await User.findById(req.params.userId);
-    res.status(200).json(user);
+    const admin = await User.findById(req.params.userId);
+    res.status(200).json(admin);
 });
 
-router.postAsync('/:userName', async (req, res) => {
+router.postAsync('/:username', async (req, res) => {
     const role = "מנהל";
-    console.log(req.params.userName)
-    const user = await User.findOneAndUpdate({username: req.params.userName}, {role}, {new: true});
-    if(!user) {
+    const userExist = await User.findOne({username: req.params.username});
+    if(!userExist) {
         return res.status(400).send('User not exist');
+    } else if(userExist.role != null) {
+        return res.status(400).send('User already an admin');
     }
-    res.status(200).json(user);
+    const admin = await User.findOneAndUpdate({username: req.params.username}, {role}, {new: true});
+    res.status(200).json(admin);
 });
 
 router.putAsync('/:userId', async (req, res) => {
-    const user = await User.findByIdAndUpdate(req.params.userId, req.body, {new: true});
-    res.status(200).json(user);
+    const admin = await User.findByIdAndUpdate(req.params.userId, req.body, {new: true});
+    res.status(200).json(admin);
 });
 
 router.deleteAsync('/:userId', async (req, res) => {
-    const user = await User.findByIdAndUpdate(req.params.userId, {role: null, permissions: null}, {new: true});
-    res.status(200).json(user);
+    const admin = await User.findByIdAndUpdate(req.params.userId, {role: null, permissions: []}, {new: true});
+    res.status(200).json(admin);
 });
 
 export default router;

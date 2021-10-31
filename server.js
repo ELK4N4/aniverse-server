@@ -16,6 +16,7 @@ import authRouter from './routes/auth/auth.js';
 import userRouter from './routes/users/user.js';
 import usersRouter from './routes/users/users.js';
 import adminsRouter from './routes/admins.js';
+import bansRouter from './routes/bans.js';
 import rateLimit  from 'express-rate-limit';
 
 dotenv.config();
@@ -82,6 +83,7 @@ app.use('/user', userRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/admins', adminsRouter);
+app.use('/bans', bansRouter);
 
 
 /* Error Handler */

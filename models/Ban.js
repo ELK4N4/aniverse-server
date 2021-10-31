@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
 const banSchema = new mongoose.Schema({
-    userId: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    date: {
+    expired: {
         type: Date,
     },
     reason: {
@@ -13,4 +13,4 @@ const banSchema = new mongoose.Schema({
     }
 });
 
-export default banSchema;
+export default mongoose.model('Ban', banSchema, 'Bans');
