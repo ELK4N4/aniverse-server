@@ -40,11 +40,17 @@ router.postAsync('/:username', async (req, res) => {
 
 //UPDATE member
 router.putAsync('/:userId', async (req, res) => {
-    const memberIndex = req.fansub.members.findIndex(member => member.userId.equals(req.params.userId));
-    req.fansub.members[memberIndex].role = req.body.role;
-    req.fansub.members[memberIndex].permissions = req.body.permissions;
+    const members = req.fansub.members.toObject();
+    const memberIndex = members.findIndex(member => member.userId.equals(req.params.userId));
+    members[memberIndex].role = req.body.role;
+    members[memberIndex].permissions = req.body.permissions;
     await req.fansub.save();
-    res.send(req.fansub.members[memberIndex]);
+
+    const user = await User.findById(members[memberIndex].userId);
+    members[memberIndex].user = user;
+    delete members[memberIndex].userId;
+    
+    res.send(members[memberIndex]);
 });
 
 //DELETE member
