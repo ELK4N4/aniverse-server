@@ -10,8 +10,8 @@ router.getAsync('/', async (req, res) => {
 });
 
 router.putAsync('/', async (req, res) => {
-    if(req.body.password) {
-        if(req.body.password.length === 0) {
+    if(req.body.password != null || req.body.password != undefined) {
+        if(req.body.password.length == 0) {
             delete req.body.password;
         } else {
             //Hash Password
