@@ -1,7 +1,7 @@
 import { Router } from '@awaitjs/express';
 import validate from '../../middlewares/validation.js';
 import Fansub from '../../models/Fansub.js';
-import { fansubScheme } from '@aniverse/utils/validations/index.js';
+import * as schemes from '@aniverse/utils/validations/index.js';
 
 const router = Router({mergeParams: true});
 
@@ -22,7 +22,7 @@ router.deleteAsync('', async (req, res) => {
 
 
 //UPDATE fansub
-router.putAsync('', validate(fansubScheme), async (req, res) => {
+router.putAsync('', validate(schemes.fansubScheme), async (req, res) => {
     const oldFansub = await Fansub.find({_id: req.fansub._id});
 
     if(!oldFansub) {

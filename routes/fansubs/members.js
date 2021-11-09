@@ -1,4 +1,4 @@
-import { roleAndPermissionsUpdateScheme, usernameScheme } from '@aniverse/utils/validations/index.js';
+import * as schemes from '@aniverse/utils/validations/index.js';
 import { Router } from '@awaitjs/express';
 import validate from '../../middlewares/validation.js';
 import User from '../../models/User.js';
@@ -18,7 +18,7 @@ router.getAsync('/', async (req, res) => {
 });
 
 //POST member
-router.postAsync('/:username', validate(usernameScheme), async (req, res) => {
+router.postAsync('/:username', validate(schemes.usernameScheme), async (req, res) => {
     const user = await User.findOne({username: req.params.username});
     if(!user) {
         return res.status(403).send('Username Not Found');
@@ -41,7 +41,7 @@ router.postAsync('/:username', validate(usernameScheme), async (req, res) => {
 });
 
 //UPDATE member
-router.putAsync('/:userId', validate(roleAndPermissionsUpdateScheme), async (req, res) => {
+router.putAsync('/:userId', validate(schemes.roleAndPermissionsUpdateScheme), async (req, res) => {
     const members = req.fansub.members.toObject();
     const memberIndex = members.findIndex(member => member.userId.equals(req.params.userId));
     members[memberIndex].role = req.body.role;

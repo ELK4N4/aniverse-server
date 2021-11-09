@@ -1,4 +1,4 @@
-import { userUpdateScheme } from '@aniverse/utils/validations/index.js';
+import * as schemes from '@aniverse/utils/validations/index.js';
 import { Router } from '@awaitjs/express';
 import bcrypt from 'bcryptjs';
 import validate from '../../middlewares/validation.js';
@@ -11,7 +11,7 @@ router.getAsync('/', async (req, res) => {
     res.status(200).json(req.user);
 });
 
-router.putAsync('/', validate(userUpdateScheme), async (req, res) => {
+router.putAsync('/', validate(schemes.userUpdateScheme), async (req, res) => {
     if(req.body.password != null || req.body.password != undefined) {
         if(req.body.password.length == 0) {
             delete req.body.password;
