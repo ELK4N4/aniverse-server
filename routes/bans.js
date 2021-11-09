@@ -1,6 +1,8 @@
 import { Router } from '@awaitjs/express';
 import User from '../models/User.js';
 import Ban from '../models/Ban.js';
+import { banScheme } from '@aniverse/utils/validations/index.js';
+import validate from '../middlewares/validation.js';
 
 const router = Router();
 
@@ -15,8 +17,8 @@ router.getAsync('/:banId', async (req, res) => {
     res.status(200).json(ban);
 });
 
-router.postAsync('/:username', async (req, res) => {
-    const userExist = await User.findOne({username: req.params.username});
+router.postAsync('/', validate(banScheme), async (req, res) => {
+    const userExist = await User.findOne({username: req.body.username});
     if(!userExist) {
         return res.status(400).send('User not exist');
     }
@@ -34,7 +36,7 @@ router.postAsync('/:username', async (req, res) => {
     res.status(200).json(savedBan);
 });
 
-router.putAsync('/:banId', async (req, res) => {
+router.putAsync('/:banId', validate(banScheme), async (req, res) => {
     const ban = await Ban.findByIdAndUpdate(req.params.banId, req.body, {new: true}).populate("user");
     res.status(200).json(ban);
 });
