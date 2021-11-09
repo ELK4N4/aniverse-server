@@ -18,7 +18,7 @@ router.getAsync('/', async (req, res) => {
 });
 
 //POST member
-router.postAsync('/:username', validate(usernameScheme) async (req, res) => {
+router.postAsync('/:username', validate(usernameScheme), async (req, res) => {
     const user = await User.findOne({username: req.params.username});
     if(!user) {
         return res.status(403).send('Username Not Found');
