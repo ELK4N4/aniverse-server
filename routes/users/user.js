@@ -1,4 +1,4 @@
-import { userUpdateScheme } from '@aniverse/utils/validations';
+import { userUpdateScheme } from '@aniverse/utils/validations/index.js';
 import { Router } from '@awaitjs/express';
 import bcrypt from 'bcryptjs';
 import validate from '../../middlewares/validation.js';
