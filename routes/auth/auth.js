@@ -2,11 +2,13 @@ import { Router } from '@awaitjs/express';
 import User from '../../models/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import validate from '../../middlewares/validation.js';
+import { loginScheme, registerScheme } from '@aniverse/utils/validations/index.js';
 
 const router = Router();
 
 //Login
-router.postAsync('/login', async (req, res) => {
+router.postAsync('/login', validate(loginScheme), async (req, res) => {
     const user = await User.findOne({email: req.body.email});
     //checking if the user exist
     if(!user) {
@@ -27,7 +29,7 @@ router.postAsync('/login', async (req, res) => {
 });
 
 //Register
-router.postAsync('/register', async (req, res) => {
+router.postAsync('/register',validate(registerScheme), async (req, res) => {
     const emailExist = await User.findOne({email: req.body.email});
 
     if(emailExist) {
