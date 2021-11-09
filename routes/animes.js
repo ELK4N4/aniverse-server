@@ -1,6 +1,8 @@
 import { Router } from '@awaitjs/express';
 import Anime from '../models/Anime.js';
 import Rating from '../models/Rating.js';
+import { animeScheme } from '@aniverse/utils/validations/index.js';
+import validate from '../middlewares/validation.js';
 import mongoose from 'mongoose';
 
 const router = Router();
@@ -85,7 +87,7 @@ router.getAsync('/:animeId', async (req, res) => {
 });
 
 //POST new animes
-router.postAsync('/', async (req, res) => {
+router.postAsync('/', validate(animeScheme), async (req, res) => {
     const anime = new Anime({
         name: {
             hebrew: req.body.name.hebrew,
@@ -122,7 +124,7 @@ router.deleteAsync('/:animeId', async (req, res) => {
 
 
 //UPDATE animes
-router.putAsync('/:animeId', async (req, res) => {
+router.putAsync('/:animeId', validate(animeScheme), async (req, res) => {
     const animeId = req.params.animeId;
     let updatedAnime = req.body;
 
