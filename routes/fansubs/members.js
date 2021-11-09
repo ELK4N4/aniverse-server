@@ -1,4 +1,4 @@
-import { usernameScheme } from '@aniverse/utils/validations/index.js';
+import { roleAndPermissionsUpdateScheme, usernameScheme } from '@aniverse/utils/validations/index.js';
 import { Router } from '@awaitjs/express';
 import validate from '../../middlewares/validation.js';
 import User from '../../models/User.js';
@@ -41,7 +41,7 @@ router.postAsync('/:username', validate(usernameScheme), async (req, res) => {
 });
 
 //UPDATE member
-router.putAsync('/:userId', async (req, res) => {
+router.putAsync('/:userId', validate(roleAndPermissionsUpdateScheme), async (req, res) => {
     const members = req.fansub.members.toObject();
     const memberIndex = members.findIndex(member => member.userId.equals(req.params.userId));
     members[memberIndex].role = req.body.role;
