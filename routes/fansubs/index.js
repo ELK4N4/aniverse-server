@@ -1,6 +1,9 @@
 import { Router } from '@awaitjs/express';
+import validate from '../../middlewares/validation.js';
 import Fansub from '../../models/Fansub.js';
 import fansubRouter from './fansub.js';
+import { fansubScheme } from '@aniverse/utils/validations/index.js';
+
 const router = Router();
 // Will be prefixed with fansub id and fansub in request body
 
@@ -19,7 +22,7 @@ router.getAsync('/', async (req, res) => {
 });
 
 //POST new fansub
-router.postAsync('/', async (req, res) => {
+router.postAsync('/', validate(fansubScheme), async (req, res) => {
     const fansubExist = await Fansub.findOne({name: req.body.name});
 
     if(fansubExist) {

@@ -23,7 +23,9 @@
   },
   "homepage": "https://github.com/aniverse-corporation/anime-prime#readme",
   "dependencies": {
+    "@aniverse/utils": "^1.1.7",
     "@awaitjs/express": "^0.8.0",
+    "ansi-regex": ">=5.0.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -37,8 +39,7 @@
     "mongoose": "^5.13.9",
     "morgan": "^1.10.0",
     "mpath": "^0.8.4",
-    "nodemailer": "^6.6.3",
-    "ansi-regex": ">=5.0.1"
+    "nodemailer": "^6.6.3"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
