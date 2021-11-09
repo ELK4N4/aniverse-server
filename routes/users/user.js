@@ -1,5 +1,7 @@
+import { userUpdateScheme } from '@aniverse/utils/validations';
 import { Router } from '@awaitjs/express';
 import bcrypt from 'bcryptjs';
+import validate from '../../middlewares/validation.js';
 import Fansub from '../../models/Fansub.js';
 import User from '../../models/User.js';
 
@@ -9,7 +11,7 @@ router.getAsync('/', async (req, res) => {
     res.status(200).json(req.user);
 });
 
-router.putAsync('/', async (req, res) => {
+router.putAsync('/', validate(userUpdateScheme), async (req, res) => {
     if(req.body.password != null || req.body.password != undefined) {
         if(req.body.password.length == 0) {
             delete req.body.password;
