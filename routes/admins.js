@@ -1,4 +1,6 @@
+import { usernameScheme } from '@aniverse/utils/validations/index.js';
 import { Router } from '@awaitjs/express';
+import validate from '../middlewares/validation.js';
 import User from '../models/User.js';
 
 const router = Router();
@@ -14,7 +16,7 @@ router.getAsync('/:userId', async (req, res) => {
     res.status(200).json(admin);
 });
 
-router.postAsync('/:username', async (req, res) => {
+router.postAsync('/:username', validate(usernameScheme), async (req, res) => {
     const role = "מנהל";
     const userExist = await User.findOne({username: req.params.username});
     if(!userExist) {

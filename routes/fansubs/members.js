@@ -1,4 +1,6 @@
+import { usernameScheme } from '@aniverse/utils/validations/index.js';
 import { Router } from '@awaitjs/express';
+import validate from '../../middlewares/validation.js';
 import User from '../../models/User.js';
 
 const router = Router();
@@ -16,7 +18,7 @@ router.getAsync('/', async (req, res) => {
 });
 
 //POST member
-router.postAsync('/:username', async (req, res) => {
+router.postAsync('/:username', validate(usernameScheme) async (req, res) => {
     const user = await User.findOne({username: req.params.username});
     if(!user) {
         return res.status(403).send('Username Not Found');
