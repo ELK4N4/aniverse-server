@@ -1,4 +1,4 @@
-import { episodeScheme } from '@aniverse/utils/validations/index.js';
+import * as schemes from '@aniverse/utils/validations/index.js';
 import { Router } from '@awaitjs/express';
 import validate from '../../middlewares/validation.js';
 import Episode from '../../models/Episode.js';
@@ -22,7 +22,7 @@ router.getAsync('/:episodeId', async (req, res) => {
 });
 
 //POST new episodes
-router.postAsync('/', validate(episodeScheme), async (req, res) => {
+router.postAsync('/', validate(schemes.episodeScheme), async (req, res) => {
     // TODO add check if user member in fansubId...
     const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id});
     if(episodeExist) {
@@ -46,7 +46,7 @@ router.postAsync('/', validate(episodeScheme), async (req, res) => {
 });
 
 //UPDATE exist animes
-router.putAsync('/:episodeId', validate(episodeScheme), async (req, res) => {
+router.putAsync('/:episodeId', validate(schemes.episodeScheme), async (req, res) => {
     const episodeId = req.params.episodeId;
 
     const oldEpisode = await Episode.findById(episodeId);
