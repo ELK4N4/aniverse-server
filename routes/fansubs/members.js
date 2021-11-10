@@ -46,7 +46,9 @@ router.putAsync('/:userId', validate(schemes.roleAndPermissionsUpdateScheme), as
     const memberIndex = members.findIndex(member => member.userId.equals(req.params.userId));
     members[memberIndex].role = req.body.role;
     members[memberIndex].permissions = req.body.permissions;
-    await req.fansub.save();
+
+    req.fansub.members = members;
+    const fansub = await req.fansub.save();
 
     const user = await User.findById(members[memberIndex].userId);
     members[memberIndex].user = user;
