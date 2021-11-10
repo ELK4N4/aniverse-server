@@ -46,7 +46,7 @@ router.putAsync('/:banId', hasPermissions('bans'), validate(schemes.banScheme), 
     res.status(200).json(ban);
 });
 
-router.deleteAsync('/:banId', async (req, res) => {
+router.deleteAsync('/:banId', hasPermissions('bans'), async (req, res) => {
     const ban = await Ban.findByIdAndRemove(req.params.banId);
     res.status(200).json(ban);
 });
