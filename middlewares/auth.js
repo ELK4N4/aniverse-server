@@ -24,7 +24,7 @@ const userParser = async (req,res,next) => {
 };
 
 const hasPermissions = (...permissions) => (req, res, next) => {
-    if (req.user.permissions.some(permission => permissions.includes(permission))) {
+    if (permissions.every(permission => req.user.permissions.includes(permission))) {
         next();
     } else {
         console.log(req.user.permissions)

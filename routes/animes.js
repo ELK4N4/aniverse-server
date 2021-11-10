@@ -87,7 +87,7 @@ router.getAsync('/:animeId', async (req, res) => {
 });
 
 //POST new animes
-router.postAsync('/', validate(schemes.animeScheme), async (req, res) => {
+router.postAsync('/', hasPermissions('animes'), validate(schemes.animeScheme), async (req, res) => {
     const anime = new Anime({
         name: {
             hebrew: req.body.name.hebrew,
