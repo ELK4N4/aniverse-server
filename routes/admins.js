@@ -1,5 +1,6 @@
 import * as schemes from '@aniverse/utils/validations/index.js';
 import { Router } from '@awaitjs/express';
+import { hasPermissions } from '../middlewares/auth.js';
 import validate from '../middlewares/validation.js';
 import User from '../models/User.js';
 
@@ -16,7 +17,7 @@ router.getAsync('/:userId', async (req, res) => {
     res.status(200).json(admin);
 });
 
-router.postAsync('/:username', validate(schemes.usernameScheme), async (req, res) => {
+router.postAsync('/:username', hasPermissions('admins'), validate(schemes.usernameScheme), async (req, res) => {
     const role = "מנהל";
     const userExist = await User.findOne({username: req.params.username});
     if(!userExist) {
@@ -28,12 +29,12 @@ router.postAsync('/:username', validate(schemes.usernameScheme), async (req, res
     res.status(200).json(admin);
 });
 
-router.putAsync('/:userId', validate(schemes.roleAndPermissionsUpdateScheme), async (req, res) => {
+router.putAsync('/:userId', hasPermissions('admins'), validate(schemes.roleAndPermissionsUpdateScheme), async (req, res) => {
     const admin = await User.findByIdAndUpdate(req.params.userId, req.body, {new: true});
     res.status(200).json(admin);
 });
 
-router.deleteAsync('/:userId', async (req, res) => {
+router.deleteAsync('/:userId', hasPermissions('admins'), async (req, res) => {
     const admin = await User.findByIdAndUpdate(req.params.userId, {role: null, permissions: []}, {new: true});
     res.status(200).json(admin);
 });
