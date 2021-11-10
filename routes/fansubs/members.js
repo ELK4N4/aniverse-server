@@ -19,7 +19,7 @@ router.getAsync('/', async (req, res) => {
 });
 
 //POST member
-router.postAsync('/', validate(schemes.usernameScheme), async (req, res) => {
+router.postAsync('/', hasFansubPermissions('members'), validate(schemes.usernameScheme), async (req, res) => {
     const user = await User.findOne({username: req.body.username});
     if(!user) {
         return res.status(403).send('Username Not Found');
@@ -59,7 +59,7 @@ router.putAsync('/:userId', hasFansubPermissions('members'), validate(schemes.ro
 });
 
 //DELETE member
-router.deleteAsync('/:userId', async (req, res) => {
+router.deleteAsync('/:userId', hasFansubPermissions('members'), async (req, res) => {
     req.fansub.members = req.fansub.members.filter(member => !member.userId.equals(req.params.userId));
     await req.fansub.save();
 
