@@ -29,7 +29,7 @@ router.getAsync('/:projectId', async (req, res) => {
 });
 
 //POST new project
-router.postAsync('/', async (req, res) => {
+router.postAsync('/', hasFansubPermissions('projects'), async (req, res) => {
     const anime = await Anime.findById(req.body._id);
     if(!anime) {
         return res.status(400).send('Anime Not Exist');
@@ -52,7 +52,7 @@ router.postAsync('/', async (req, res) => {
 });
 
 //DELETE project
-router.deleteAsync('/:projectId', async (req, res) => {
+router.deleteAsync('/:projectId', hasFansubPermissions('projects'), async (req, res) => {
     const deletedProject = await Project.findByIdAndRemove(req.params.projectId);
     if (deletedProject) {
         return res.status(203).send(deletedProject);
@@ -62,7 +62,7 @@ router.deleteAsync('/:projectId', async (req, res) => {
 });
 
 //PUT project status
-router.putAsync('/:projectId/status', async (req, res) => {
+router.putAsync('/:projectId/status', hasFansubPermissions('projects'), async (req, res) => {
     console.log(req.body)
     const updatedProjectStatus = await Project.findByIdAndUpdate(req.params.projectId, {status: req.body.status}, {new: true}).populate('anime');
     if (updatedProjectStatus) {
@@ -74,6 +74,7 @@ router.putAsync('/:projectId/status', async (req, res) => {
 
 /*** EPISODES ***/
 import episodesRouter from './episodes.js';
+import { hasFansubPermissions } from '../../middlewares/auth.js';
 router.useAsync('/:projectId/episodes/', async (req, res, next) => {
     const project = await Project.findById(req.params.projectId).populate({
         path: 'episodes',

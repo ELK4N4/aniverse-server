@@ -1,5 +1,6 @@
 import * as schemes from '@aniverse/utils/validations/index.js';
 import { Router } from '@awaitjs/express';
+import { hasFansubPermissions } from '../../middlewares/auth.js';
 import validate from '../../middlewares/validation.js';
 import Episode from '../../models/Episode.js';
 
@@ -22,7 +23,7 @@ router.getAsync('/:episodeId', async (req, res) => {
 });
 
 //POST new episodes
-router.postAsync('/', validate(schemes.episodeScheme), async (req, res) => {
+router.postAsync('/', hasFansubPermissions('projects'), validate(schemes.episodeScheme), async (req, res) => {
     // TODO add check if user member in fansubId...
     const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id});
     if(episodeExist) {
@@ -46,7 +47,7 @@ router.postAsync('/', validate(schemes.episodeScheme), async (req, res) => {
 });
 
 //UPDATE exist animes
-router.putAsync('/:episodeId', validate(schemes.episodeScheme), async (req, res) => {
+router.putAsync('/:episodeId', hasFansubPermissions('projects'), validate(schemes.episodeScheme), async (req, res) => {
     const episodeId = req.params.episodeId;
 
     const oldEpisode = await Episode.findById(episodeId);
@@ -67,7 +68,7 @@ router.putAsync('/:episodeId', validate(schemes.episodeScheme), async (req, res)
 });
 
 //DELETE exist animes
-router.deleteAsync('/:episodeId', async (req, res) => {
+router.deleteAsync('/:episodeId', hasFansubPermissions('projects'), async (req, res) => {
     const episodeId = req.params.episodeId;
     const deletedEpisode = await Episode.findOneAndDelete({ _id: episodeId });
 

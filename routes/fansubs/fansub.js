@@ -22,7 +22,7 @@ router.deleteAsync('', async (req, res) => {
 
 
 //UPDATE fansub
-router.putAsync('', validate(schemes.fansubScheme), async (req, res) => {
+router.putAsync('', hasFansubPermissions('fansub'), validate(schemes.fansubScheme), async (req, res) => {
     const oldFansub = await Fansub.find({_id: req.fansub._id});
 
     if(!oldFansub) {
@@ -63,6 +63,7 @@ router.useAsync('/followers/', async (req, res, next) => {
 
 /*** MEMBERS ***/
 import membersRouter from './members.js';
+import { hasFansubPermissions } from '../../middlewares/auth.js';
 router.useAsync('/members/', async (req, res, next) => {
     next();
 }, membersRouter);
