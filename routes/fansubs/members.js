@@ -25,6 +25,11 @@ router.postAsync('/', hasFansubPermissions('members'), validate(schemes.username
         return res.status(403).send('Username Not Found');
     }
 
+    const member = req.fansub.members.find(member => member.userId.equals(user._id));
+    if(member) {
+        return res.status(403).send('User Is Already Member');
+    }
+
     const newMember = {
         userId: user._id,
         role: 'חבר צוות',
