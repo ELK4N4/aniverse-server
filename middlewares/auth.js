@@ -27,9 +27,17 @@ const hasPermissions = (...permissions) => (req, res, next) => {
     if (permissions.every(permission => req.user.permissions.includes(permission))) {
         next();
     } else {
-        console.log(req.user.permissions)
         return res.status(401).send('Unauthorized');
     }
 };
 
-export { hasPermissions, userParser };
+const hasFansubPermissions = (...permissions) => (req, res, next) => {
+    const member = req.fansub.members.find(member => member.userId.equals(req.user._id));
+    if (permissions.every(permission => member.permissions.includes(permission))) {
+        next();
+    } else {
+        return res.status(401).send('Unauthorized');
+    }
+};
+
+export { hasPermissions, hasFansubPermissions, userParser };
