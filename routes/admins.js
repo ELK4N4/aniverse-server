@@ -17,15 +17,15 @@ router.getAsync('/:userId', async (req, res) => {
     res.status(200).json(admin);
 });
 
-router.postAsync('/:username', hasPermissions('admins'), validate(schemes.usernameScheme), async (req, res) => {
+router.postAsync('/', hasPermissions('admins'), validate(schemes.usernameScheme), async (req, res) => {
     const role = "מנהל";
-    const userExist = await User.findOne({username: req.params.username});
+    const userExist = await User.findOne({username: req.body.username});
     if(!userExist) {
         return res.status(400).send('User not exist');
     } else if(userExist.role != null) {
         return res.status(400).send('User already an admin');
     }
-    const admin = await User.findOneAndUpdate({username: req.params.username}, {role}, {new: true});
+    const admin = await User.findOneAndUpdate({username: req.body.username}, {role}, {new: true});
     res.status(200).json(admin);
 });
 
