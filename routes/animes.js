@@ -124,7 +124,7 @@ router.deleteAsync('/:animeId', async (req, res) => {
 
 
 //UPDATE animes
-router.putAsync('/:animeId', validate(schemes.animeScheme), async (req, res) => {
+router.putAsync('/:animeId', hasPermissions('animes'), validate(schemes.animeScheme), async (req, res) => {
     const animeId = req.params.animeId;
     let updatedAnime = req.body;
 
@@ -232,6 +232,7 @@ router.deleteAsync('/:animeId/rating/:ratingId', async (req, res) => {
 /*** SPECIFIC EPISODES ***/
 
 import episodesRouter from './episodes/episodes.js';
+import { hasPermissions } from '../middlewares/auth.js';
 router.useAsync('/:animeId/episodes', async (req, res, next) => {
     const anime = await Anime.findById({_id: req.params.animeId});
     if(!anime) {

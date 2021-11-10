@@ -23,16 +23,13 @@ const userParser = async (req,res,next) => {
     }
 };
 
-const hasRole = (role) => {
-    return function(req, res, next) {
-        if (req.user.role.includes(role)) {
-            next();
-        }
-        else
-        {
-            return res.status(403).redirect('/');
-        }
-    };
+const hasPermissions = (...permissions) => (req, res, next) => {
+    if (req.user.permissions.some(permission => permissions.includes(permission))) {
+        next();
+    } else {
+        console.log(req.user.permissions)
+        return res.status(401).send('Unauthorized');
+    }
 };
 
-export { hasRole, userParser };
+export { hasPermissions, userParser };
