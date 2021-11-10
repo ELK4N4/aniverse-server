@@ -20,10 +20,14 @@ router.getAsync('/:banId', async (req, res) => {
 
 router.postAsync('/', hasPermissions('bans'), validate(schemes.banScheme), async (req, res) => {
     const userExist = await User.findOne({username: req.body.username});
+
     if(!userExist) {
         return res.status(400).send('User not exist');
     }
-    const banExist = await Ban.findOneAndUpdate({user: userExist._id});
+    const banExist = await Ban.findOne({user: userExist._id});
+    console.log(banExist)
+    console.log({user: userExist._id})
+
     if(banExist) {
         return res.status(400).send('Ban is already exist');
     }
