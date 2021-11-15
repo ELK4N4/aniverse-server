@@ -30,8 +30,14 @@ router.postAsync('/', hasPermissions('admins'), validate(schemes.usernameScheme)
 });
 
 router.putAsync('/:userId', hasPermissions('admins'), validate(schemes.roleAndPermissionsUpdateScheme), async (req, res) => {
-    const admin = await User.findByIdAndUpdate(req.params.userId, req.body, {new: true});
-    res.status(200).json(admin);
+    // TODO super permission for owners
+    const admin = await User.findById(req.params.userId);
+    if( admin.permissions.includes('admins') && !admin._id.equals(req.user._id) ) {
+        return res.status(401).send('Unauthorized');
+    }
+    
+    const updatedAdmin = await User.findByIdAndUpdate(req.params.userId, req.body, {new: true});
+    res.status(200).json(updatedAdmin);
 });
 
 router.deleteAsync('/:userId', hasPermissions('admins'), async (req, res) => {
