@@ -25,8 +25,7 @@ const userParser = async (req,res,next) => {
 };
 
 const hasPermissions = (...permissions) => (req, res, next) => {
-    console.log(owners.isOwner(req.user._id));
-    if (permissions.every(permission => req.user.permissions.includes(permission))) {
+    if (permissions.every(permission => req.user.permissions.includes(permission)) || owners.isOwner(req.user._id)) {
         next();
     } else {
         return res.status(401).send('Unauthorized');
