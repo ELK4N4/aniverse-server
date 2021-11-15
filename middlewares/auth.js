@@ -33,7 +33,7 @@ const hasPermissions = (...permissions) => (req, res, next) => {
 
 const hasFansubPermissions = (...permissions) => (req, res, next) => {
     const member = req.fansub.members.find(member => member.userId.equals(req.user._id));
-    if (permissions.every(permission => member.permissions.includes(permission))) {
+    if (permissions.every(permission => member.permissions.includes(permission)) || member.owner) {
         next();
     } else {
         return res.status(401).send('Unauthorized');
