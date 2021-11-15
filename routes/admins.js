@@ -31,7 +31,8 @@ router.postAsync('/', hasPermissions('admins'), validate(schemes.usernameScheme)
 
 router.putAsync('/:userId', hasPermissions('admins'), validate(schemes.roleAndPermissionsUpdateScheme), async (req, res) => {
     const admin = await User.findById(req.params.userId);
-    if(admin.permissions.includes('admins') && !admin._id.equals(req.user._id) && !req.user.owner) {
+    console.log()
+    if( (admin.permissions.includes('admins') && !admin._id.equals(req.user._id) && !req.user.owner) || (admin.owner && !admin._id.equals(req.user._id))) {
         return res.status(401).send('Unauthorized');
     }
     
