@@ -33,9 +33,10 @@ router.postAsync('/', validate(schemes.fansubScheme), async (req, res) => {
         name: req.body.name,
         avatar: req.body.avatar,
         createdByUser: req.user._id,
+        owner: req.user._id,
         members: [{
             userId: req.user._id,
-            role: 'מנהל',
+            role: 'בעלים',
             permissions: [
                 'projects',
                 'fansub',
@@ -49,7 +50,6 @@ router.postAsync('/', validate(schemes.fansubScheme), async (req, res) => {
     await req.user.save();
 
     res.status(201).json(savedFansub);
-
 });
 
 router.useAsync('/:fansubId/', async (req, res, next) => {
