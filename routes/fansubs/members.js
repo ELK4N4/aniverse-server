@@ -51,7 +51,6 @@ router.putAsync('/:userId', hasFansubPermissions('members'), validate(schemes.ro
     if(req.fansub.owner.equals(req.params.userId)) {
         return res.status(401).send('Unauthorized');
     }
-    
 
     const members = req.fansub.members.toObject();
     const memberIndex = members.findIndex(member => member.userId.equals(req.params.userId));
