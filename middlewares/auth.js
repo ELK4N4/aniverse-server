@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import owners from '../utils/owners.js';
 
 const userParser = async (req,res,next) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -24,6 +25,7 @@ const userParser = async (req,res,next) => {
 };
 
 const hasPermissions = (...permissions) => (req, res, next) => {
+    console.log(owners.isOwner(req.user._id));
     if (permissions.every(permission => req.user.permissions.includes(permission))) {
         next();
     } else {
