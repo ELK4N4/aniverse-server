@@ -48,15 +48,23 @@ router.postAsync('/', hasFansubPermissions('members'), validate(schemes.username
 
 //UPDATE member
 router.putAsync('/:userId', hasFansubPermissions('members'), validate(schemes.roleAndPermissionsUpdateScheme), async (req, res) => {
+    if(req.fansub.owner.equals(req.params.userId)) {
+        return res.status(401).send('Unauthorized');
+    }
+    
+
     const members = req.fansub.members.toObject();
     const memberIndex = members.findIndex(member => member.userId.equals(req.params.userId));
+    if(( members[memberIndex].permissions.includes('members') && !members[memberIndex].userId.equals(req.user._id) ) && !req.fansub.owner.equals(req.user._id)) {
+        return res.status(401).send('Unauthorized');
+    }
     members[memberIndex].role = req.body.role;
     members[memberIndex].permissions = req.body.permissions;
 
     req.fansub.members = members;
     const fansub = await req.fansub.save();
 
-    const user = await User.findById(members[memberIndex].userId);
+    const user = await User.findById(req.params.userId);
     members[memberIndex].user = user;
     delete members[memberIndex].userId;
     
