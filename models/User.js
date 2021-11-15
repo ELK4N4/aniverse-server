@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import owners from '../utils/owners.js';
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -52,6 +53,12 @@ const userSchema = new mongoose.Schema({
 }, 
 {
     timestamps: true,
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
+});
+
+userSchema.virtual('owner').get(function () {
+    return this.owner = owners.isOwner(this._id);
 });
 
 export default mongoose.model('User', userSchema, 'Users');
