@@ -8,8 +8,19 @@ import { hasPermissions } from '../middlewares/auth.js';
 const router = Router();
 
 router.getAsync('/', async (req, res) => {
-    const bans = await Ban.find().populate('user');
-    res.header('Content-Range', 'users 0-24/319');
+    const skip = +req.query.skip ?? 0;
+    const limit = +req.query.limit ?? 50;
+    let bans;
+
+    if (req.query.search) {
+        const user = await User.findOne({'username': new RegExp('^' + req.query.search + '$', 'i')}).sort({'createdAt': 1}).limit(limit).skip(skip);
+        if(!user) {
+            return res.send([]);
+        }
+        bans = await Ban.find({'user': user._id}).sort({'createdAt': 1}).limit(limit).skip(skip).populate('user');
+    } else {
+        bans = await Ban.find().sort({'createdAt': 1}).limit(limit).skip(skip).populate('user');
+    }
     res.status(200).json(bans);
 });
 
@@ -25,8 +36,6 @@ router.postAsync('/', hasPermissions('bans'), validate(schemes.banScheme), async
         return res.status(400).send('User not exist');
     }
     const banExist = await Ban.findOne({user: userExist._id});
-    console.log(banExist)
-    console.log({user: userExist._id})
 
     if(banExist) {
         return res.status(400).send('Ban is already exist');

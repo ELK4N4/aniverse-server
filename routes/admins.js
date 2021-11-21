@@ -7,8 +7,16 @@ import User from '../models/User.js';
 const router = Router();
 
 router.getAsync('/', async (req, res) => {
-    const admins = await User.find({role: {$ne: null}});
-    res.header('Content-Range', 'users 0-24/319');
+    const skip = +req.query.skip ?? 0;
+    const limit = +req.query.limit ?? 50;
+    let admins;
+
+    if (req.query.search) {
+        admins = await User.find({role: {$ne: null}, 'username' : new RegExp('^' + req.query.search + '$', 'i')}).sort({'createdAt': 1}).limit(limit).skip(skip);
+    } else {
+        admins = await User.find({role: {$ne: null}}).sort({'createdAt': 1}).limit(limit).skip(skip);
+    }
+
     res.status(200).json(admins);
 });
 
