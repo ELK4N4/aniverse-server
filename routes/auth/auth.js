@@ -152,7 +152,6 @@ ${process.env.CLIENT_URL}/login?token=${token}
             return res.status(200).send('Token is sent');
         }
     });
-    
 
     res.status(200).send('Token is sent');
 });
