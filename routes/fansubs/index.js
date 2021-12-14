@@ -14,10 +14,11 @@ router.getAsync('/', async (req, res) => {
     const skip = +req.query.skip ?? 0;
     const limit = +req.query.limit ?? 50;
     if (req.query.search) {
-        fansubs = await Fansub.find({ 'name' : new RegExp('^' + req.query.search + '$', 'i')}).sort({'followers': -1}).limit(limit).skip(skip);
+        fansubs = await Fansub.find({ 'name' : new RegExp('^' + req.query.search + '$', 'i'), confirmed: req.query.confirmed}).sort({'followers': -1}).limit(limit).skip(skip);
     } else {
-        fansubs = await Fansub.find().sort({'followers': -1}).limit(limit).skip(skip);
+        fansubs = await Fansub.find({confirmed: req.query.confirmed}).sort({'followers': -1}).limit(limit).skip(skip);
     }
+
     res.json(fansubs);
 });
 
@@ -32,6 +33,9 @@ router.postAsync('/', validate(schemes.fansubScheme), async (req, res) => {
     const fansub = new Fansub({
         name: req.body.name,
         avatar: req.body.avatar,
+        banner: req.body.banner,
+        website: req.body.website,
+        description: req.body.description,
         createdByUser: req.user._id,
         owner: req.user._id,
         members: [{
@@ -51,6 +55,21 @@ router.postAsync('/', validate(schemes.fansubScheme), async (req, res) => {
 
     res.status(201).json(savedFansub);
 });
+
+//POST confirm fansub
+router.getAsync('/:fansubId/confirm/', async (req, res) => {
+    const fansub = await Fansub.findById(req.params.fansubId);
+
+    if(!fansub) {
+        return res.status(400).send('Fansub is not exist');
+    }
+
+    fansub.confirmed = true;
+
+    const savedFansub = await fansub.save();
+    res.status(201).json(savedFansub);
+});
+
 
 router.useAsync('/:fansubId/', async (req, res, next) => {
     const fansub = await Fansub.findById(req.params.fansubId).populate({

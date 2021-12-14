@@ -27,6 +27,10 @@ const fansubSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    description: {
+        type: String,
+        default: ''
+    },
     members: [memberSchema],
     projects: [{ 
         type: mongoose.Schema.Types.ObjectId, 
@@ -36,7 +40,7 @@ const fansubSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    verified: {
+    confirmed: {
         type: Boolean,
         default: false
     },
