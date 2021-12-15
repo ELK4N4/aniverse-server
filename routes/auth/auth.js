@@ -97,6 +97,59 @@ ${process.env.CLIENT_URL}/login?token=${token}
     return res.status(200).json({token, user: savedUser});
 });
 
+//Forgot password
+router.postAsync('/forgot-password', validate(schemes.forgotPasswordScheme), async (req, res) => {
+    const user = await User.findOne({email: req.body.email});
+
+    if(!user) {
+        return res.status(400).send('User is not exist');
+    }
+
+    //Create and assign a TOKEN
+    const token = jwt.sign({_id: user._id, email: user.email}, process.env.TOKEN_SECRET, {expiresIn: '7d'});
+
+    const welcomeMail = {
+        from: '"Aniverse - NoReply"',
+        to: user.email,
+        subject: 'איפוס סיסמא - Aniverse',
+        text: `שלום ${user.username},
+
+קישור לאיפוס סיסמא:
+${process.env.CLIENT_URL}/reset-password?token=${token}
+`
+    };
+
+    transporter.sendMail(welcomeMail, function(error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            
+        }
+    });
+
+    
+    return res.status(200).send("נשלח קישור איפוס סיסמא למייל");
+});
+
+//Reset password
+router.postAsync('/reset-password/:token', validate(schemes.resetPasswordScheme), async (req, res) => {
+    try {
+        const decoded = jwt.verify(req.params.token, process.env.TOKEN_SECRET);
+        //Hash Password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        const user = await User.findByIdAndUpdate(decoded._id, {password: hashedPassword}, {new: true});
+        if(!user) {
+            return res.status(400).send('Wrong token!');
+        }
+
+        return res.status(200).send("סיסמא אופסה בהצלחה!");
+    } catch(err) {
+        console.log(err)
+        return res.status(400).send('Wrong token!');
+    }
+});
+
 //Verify
 router.getAsync('/verify/:token', async (req, res) => {
     try {
