@@ -22,10 +22,6 @@ const userSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
-    banned: {
-        type: Date,
-        default: null
-    },
     avatar: {
         type: String,
         default: ''

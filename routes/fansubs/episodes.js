@@ -3,6 +3,8 @@ import { Router } from '@awaitjs/express';
 import { hasFansubPermissions } from '../../middlewares/auth.js';
 import validate from '../../middlewares/validation.js';
 import Episode from '../../models/Episode.js';
+import Notification from '../../models/Notification.js';
+import User from '../../models/User.js';
 
 const router = Router();
 
@@ -31,7 +33,7 @@ router.postAsync('/', hasFansubPermissions('projects'), validate(schemes.episode
     }
 
     const episode = new Episode({
-        anime: req.project.anime,
+        anime: req.project.anime._id,
         project: req.project._id,
         name: req.body.name,
         number: req.body.number,
@@ -42,8 +44,18 @@ router.postAsync('/', hasFansubPermissions('projects'), validate(schemes.episode
     });
 
     const savedEpisode = await episode.save();
+    const users = await User.find({followingFansubs: {$all: req.fansub._id} });
+    users.forEach(async (user) => {
+        console.log(user)
+        const notification = new Notification({
+            message: `הפאנסאב ${req.fansub.name} הוסיף פרק ${savedEpisode.number} לאנימה ${req.project.anime.name.hebrew}`,
+            link: `/animes/${req.project.anime._id}/episodes?fansub=${req.fansub._id}&episode=${savedEpisode._id}`,
+            userId: user._id
+        });
+    
+        await notification.save();
+    })
     res.status(201).json(savedEpisode);
-
 });
 
 //UPDATE exist animes

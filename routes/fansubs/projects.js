@@ -76,10 +76,13 @@ router.putAsync('/:projectId/status', hasFansubPermissions('projects'), async (r
 import episodesRouter from './episodes.js';
 import { hasFansubPermissions } from '../../middlewares/auth.js';
 router.useAsync('/:projectId/episodes/', async (req, res, next) => {
-    const project = await Project.findById(req.params.projectId).populate({
+    const project = await Project.findById(req.params.projectId).populate([{
         path: 'episodes',
         model: 'Episode',
-    });
+    }, {
+        path: 'anime',
+        model: 'Anime',
+    }]);
     if(!project) {
         return res.status(400).json({error: 'Project Not Exist'});
     }

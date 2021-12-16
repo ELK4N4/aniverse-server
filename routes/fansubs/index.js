@@ -2,6 +2,7 @@ import { Router } from '@awaitjs/express';
 import validate from '../../middlewares/validation.js';
 import Fansub from '../../models/Fansub.js';
 import fansubRouter from './fansub.js';
+import Notification from '../../models/Notification.js';
 import * as schemes from '@aniverse/utils/validations/index.js';
 
 const router = Router();
