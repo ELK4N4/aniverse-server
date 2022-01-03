@@ -1,5 +1,6 @@
 import { Router } from '@awaitjs/express';
 import User from '../../models/User.js';
+import Ban from '../../models/Ban.js';
 import UnverifiedUser from '../../models/UnverifiedUser.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -21,7 +22,14 @@ const router = Router();
 
 //Login
 router.postAsync('/login', validate(schemes.loginScheme), async (req, res) => {
+
     const user = await User.findOne({email: req.body.email});
+    if(user) {
+        const ban = await Ban.findOne({user: user._id});
+        if(ban) {
+            res.status(403).send('המשתמש חסום!');
+        }
+    }
     const unverifiedExist = await UnverifiedUser.findOne({email: req.body.email});
 
     if(user) {

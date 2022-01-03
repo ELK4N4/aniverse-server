@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import owners from '../utils/owners.js';
+import Ban from '../models/Ban.js';
 
 const userParser = async (req,res,next) => {
     const token = req.headers.authorization?.split(' ')[1];
