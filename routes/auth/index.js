@@ -38,11 +38,13 @@ router.postAsync('/login', validate(schemes.loginScheme), async (req, res) => {
         }
         const ban = await Ban.findOne({user: user._id});
         if(ban && new Date().getTime() - ban.expire.getTime() < 0) {
-            return res.status(403).send(`עד לתאריך: ${ban.expire.toLocaleDateString('he-IL')}
+            if(new Date().getTime() - ban.expire.getTime() < 0) {
+                return res.status(403).send(`עד לתאריך: ${ban.expire.toLocaleDateString('he-IL')}
 סיבה:
 ${ban.reason}`);
-        } else {
-            await Ban.findByIdAndRemove(ban._id);
+            } else {
+                await Ban.findByIdAndRemove(ban._id);
+            }
         }
         //Create and assign a TOKEN
         const token = jwt.sign({id: user._id, username: user.username}, process.env.TOKEN_SECRET, {expiresIn: '7d'});
