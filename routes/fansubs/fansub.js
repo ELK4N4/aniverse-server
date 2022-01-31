@@ -11,8 +11,8 @@ router.getAsync('', async (req, res) => {
 });
 
 //DELETE exist fansub
-router.deleteAsync('', async (req, res) => {
-    const deletedFansub = await Fansub.findOneAndDelete({ _id: req.fansub._id });
+router.deleteAsync('', hasFansubPermissions('owner'), async (req, res) => {
+    const deletedFansub = await Fansub.findByIdAndDelete(req.fansub._id);
     if (deletedFansub) {
         return res.status(203).send(deletedFansub);
     }
@@ -23,30 +23,16 @@ router.deleteAsync('', async (req, res) => {
 
 //UPDATE fansub
 router.putAsync('', hasFansubPermissions('fansub'), validate(schemes.fansubScheme), async (req, res) => {
-    const oldFansub = await Fansub.find({_id: req.fansub._id});
+    const oldFansub = await Fansub.findById(req.fansub._id);
 
     if(!oldFansub) {
         return res.status(403).send('Fansub Not Found');
     }
     
-    const fansubFields = {...oldFansub, ...req.body};
-    const updatedFansub = await Fansub.findOneAndUpdate({_id: req.fansub._id}, fansubFields, {new: true});
+    const fansubFields = {oldFansub, ...req.body};
+    const updatedFansub = await Fansub.findByIdAndUpdate(req.fansub._id, fansubFields, {new: true});
 
     res.status(200).send(updatedFansub);
-});
-
-//GET members
-router.postAsync('/followers', async (req, res) => {
-    if(req.user.followingFansubs.includes(req.fansub._id)){
-        return res.status(401).send('You are already following');
-    }
-    req.user.followingFansubs.push(req.fansub._id);
-    await req.user.save();
-    
-    req.fansub.followers++;
-    await req.fansub.save();
-
-    res.status(203).send('Following successfully');
 });
 
 /*** PROJECTS ***/

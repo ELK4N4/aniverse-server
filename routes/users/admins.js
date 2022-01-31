@@ -1,8 +1,8 @@
 import * as schemes from '@aniverse/utils/validations/index.js';
 import { Router } from '@awaitjs/express';
-import { hasPermissions } from '../middlewares/auth.js';
-import validate from '../middlewares/validation.js';
-import User from '../models/User.js';
+import { hasPermissions } from '../../middlewares/auth.js';
+import validate from '../../middlewares/validation.js';
+import User from '../../models/User.js';
 
 const router = Router();
 
@@ -39,7 +39,6 @@ router.postAsync('/', hasPermissions('admins'), validate(schemes.usernameScheme)
 
 router.putAsync('/:userId', hasPermissions('admins'), validate(schemes.roleAndPermissionsUpdateScheme), async (req, res) => {
     const admin = await User.findById(req.params.userId);
-    console.log()
     if( (admin.permissions.includes('admins') && !admin._id.equals(req.user._id) && !req.user.owner) || (admin.owner && !admin._id.equals(req.user._id))) {
         return res.status(401).send('Unauthorized');
     }

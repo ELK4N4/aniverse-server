@@ -10,7 +10,7 @@ router.getAsync('/', async (req, res) => {
 //POST new follower
 router.postAsync('/', async (req, res) => {
     if(req.user.followingFansubs.includes(req.fansub._id)){
-        return res.status(401).send('You are already following');
+        return res.status(300).send('You are already following');
     }
     req.user.followingFansubs.push(req.fansub._id);
     await req.user.save();
@@ -27,7 +27,7 @@ router.deleteAsync('/', async (req, res) => {
         return res.status(401).send('You are not following');
     }
 
-    var index = req.user.followingFansubs.indexOf(req.fansub._id);
+    let index = req.user.followingFansubs.indexOf(req.fansub._id);
     req.user.followingFansubs.splice(index, 1);
     await req.user.save();
     

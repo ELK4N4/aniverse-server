@@ -1,9 +1,10 @@
 import { Router } from '@awaitjs/express';
-import User from '../models/User.js';
-import Ban from '../models/Ban.js';
+import User from '../../models/User.js';
+import Ban from '../../models/Ban.js';
 import * as schemes from '@aniverse/utils/validations/index.js';
-import validate from '../middlewares/validation.js';
-import { hasPermissions } from '../middlewares/auth.js';
+import validate from '../../middlewares/validation.js';
+import { hasPermissions } from '../../middlewares/auth.js';
+import owners from '../../utils/owners.js';
 
 const router = Router();
 
@@ -35,6 +36,11 @@ router.postAsync('/', hasPermissions('bans'), validate(schemes.banScheme), async
     if(!userExist) {
         return res.status(400).send('User not exist');
     }
+
+    if(owners.find(userExist._id)) {
+        return res.status(403).send('You cannot ban an owner');
+    }
+
     const banExist = await Ban.findOne({user: userExist._id});
 
     if(banExist) {

@@ -26,7 +26,6 @@ router.getAsync('/:episodeId', async (req, res) => {
 
 //POST new episodes
 router.postAsync('/', hasFansubPermissions('projects'), validate(schemes.episodeScheme), async (req, res) => {
-    // TODO add check if user member in fansubId...
     const episodeExist = await Episode.findOne({number: req.body.number, project: req.project._id});
     if(episodeExist) {
         return res.status(400).send('הפרק כבר קיים');
@@ -46,7 +45,6 @@ router.postAsync('/', hasFansubPermissions('projects'), validate(schemes.episode
     const savedEpisode = await episode.save();
     const users = await User.find({followingFansubs: {$all: req.fansub._id} });
     users.forEach(async (user) => {
-        console.log(user)
         const notification = new Notification({
             message: `הפאנסאב ${req.fansub.name} הוסיף פרק ${savedEpisode.number} לאנימה ${req.project.anime.name.hebrew}`,
             link: `/animes/${req.project.anime._id}/episodes?fansub=${req.fansub._id}&episode=${savedEpisode._id}`,
@@ -61,7 +59,6 @@ router.postAsync('/', hasFansubPermissions('projects'), validate(schemes.episode
 //UPDATE exist animes
 router.putAsync('/:episodeId', hasFansubPermissions('projects'), validate(schemes.episodeScheme), async (req, res) => {
     const episodeId = req.params.episodeId;
-
     const oldEpisode = await Episode.findById(episodeId);
 
     if(!oldEpisode) {
@@ -81,7 +78,7 @@ router.putAsync('/:episodeId', hasFansubPermissions('projects'), validate(scheme
 //DELETE exist animes
 router.deleteAsync('/:episodeId', hasFansubPermissions('projects'), async (req, res) => {
     const episodeId = req.params.episodeId;
-    const deletedEpisode = await Episode.findOneAndDelete({ _id: episodeId });
+    const deletedEpisode = await Episode.findByIdAndDelete(episodeId);
 
     if (deletedEpisode) {
         return res.status(203).send(deletedEpisode);

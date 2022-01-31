@@ -27,7 +27,7 @@ router.postAsync('/', hasFansubPermissions('members'), validate(schemes.username
 
     const member = req.fansub.members.find(member => member.userId.equals(user._id));
     if(member) {
-        return res.status(403).send('User Is Already Member');
+        return res.status(403).send('User is lready a member');
     }
 
     const newMember = {

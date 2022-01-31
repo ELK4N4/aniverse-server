@@ -41,6 +41,8 @@ const animeSchema = new mongoose.Schema({
 }, 
 {
     timestamps: true,
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
 });
 
 animeSchema.method('getRating', async function (userId) {

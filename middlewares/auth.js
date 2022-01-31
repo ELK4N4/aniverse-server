@@ -41,4 +41,12 @@ const hasFansubPermissions = (...permissions) => (req, res, next) => {
     }
 };
 
-export { hasPermissions, hasFansubPermissions, userParser };
+const usersOnly = (req, res, next) => {
+    if(req.user) {
+        next();
+    } else {
+        return res.status(401).send('Unauthorized');
+    }
+}
+
+export { hasPermissions, hasFansubPermissions, userParser, usersOnly };

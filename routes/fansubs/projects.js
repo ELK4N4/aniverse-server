@@ -63,7 +63,6 @@ router.deleteAsync('/:projectId', hasFansubPermissions('projects'), async (req, 
 
 //PUT project status
 router.putAsync('/:projectId/status', hasFansubPermissions('projects'), async (req, res) => {
-    console.log(req.body)
     const updatedProjectStatus = await Project.findByIdAndUpdate(req.params.projectId, {status: req.body.status}, {new: true}).populate('anime');
     if (updatedProjectStatus) {
         return res.status(203).send(updatedProjectStatus);
