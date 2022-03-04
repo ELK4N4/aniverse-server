@@ -34,6 +34,10 @@ const animeSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    copyright: {
+        type: Boolean,
+        defult: false,
+    },
     projects: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Project'

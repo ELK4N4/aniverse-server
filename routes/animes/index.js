@@ -52,7 +52,9 @@ router.getAsync('/:animeId', async (req, res) => {
     const animeWithRecommended = anime.toJSON();
     animeWithRecommended.rating = await anime.getRating(req.user?._id);
     
-    if(anime.projects.length > 1) {
+    if(anime.copyright) {
+        animeWithRecommended.projects = [];
+    } else if(anime.projects.length > 1) {
         let episodesNumber = animeWithRecommended.projects.reduce(
             (previousValue, currentProject) =>
                 Math.max(previousValue, Math.max.apply(Math, currentProject.episodes.map(function(o) { return o.number; }))
