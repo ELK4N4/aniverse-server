@@ -1,6 +1,7 @@
 import { Router } from '@awaitjs/express';
 import Anime from '../../models/Anime.js';
 import Rating from '../../models/Rating.js';
+import AnimeTracking from '../../models/AnimeTracking.js';
 import * as schemes from '@aniverse/utils/validations/index.js';
 import validate from '../../middlewares/validation.js';
 import mongoose from 'mongoose';
@@ -85,6 +86,9 @@ router.getAsync('/:animeId', async (req, res) => {
         animeWithRecommended.projects.unshift(recommended);
     }
 
+    const animeTracking = await AnimeTracking.findOne({userId: req.user._id, animeId: anime._id});
+    animeWithRecommended.tracking = animeTracking;
+    
     res.status(203).json(animeWithRecommended);
 });
 
@@ -232,7 +236,50 @@ router.deleteAsync('/:animeId/rating/:ratingId', usersOnly, async (req, res) => 
     res.status(200).json(score);
 });
 
+//POST animes tracking
+router.postAsync('/:animeId/tracking', usersOnly, validate(schemes.animeTrackingScheme), async (req, res) => {
+    const animeId = req.params.animeId;
+    const anime = await Anime.findById(animeId);
 
+    if(!anime){
+        return res.status(404).send('Anime Not Found');
+    }
+
+    const animeTracking = await AnimeTracking.findOne({userId: req.user._id, animeId});
+
+    if(animeTracking) {
+        return res.status(404).send('Use PUT instead of get...');
+    }
+
+    const tracking = new AnimeTracking({
+        userId: req.user._id,
+        animeId,
+        status: req.body.status,
+        currentEpisode: req.body.currentEpisode,
+    });
+
+    await tracking.save();
+    res.status(200).json(tracking);
+});
+
+//PUT animes tracking
+router.putAsync('/:animeId/tracking/:trackingId', usersOnly, validate(schemes.animeTrackingScheme), async (req, res) => {
+    const animeId = req.params.animeId;
+    
+    const anime = await Anime.findById(animeId);
+
+    if(!anime){
+        return res.status(404).send('Anime Not Found');
+    }
+
+    const animeTracking = await AnimeTracking.findByIdAndUpdate(req.params.trackingId, req.body, {new: true});
+
+    if(!animeTracking) {
+        return res.status(404).send('Use POST instead of get...');
+    }
+
+    res.status(200).json(animeTracking);
+});
 
 
 /*** SPECIFIC EPISODES ***/
