@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    about: {
+        type: String,
+        default: ''
+    },
     memberInFansubs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Fansub'
