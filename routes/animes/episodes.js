@@ -28,10 +28,14 @@ router.getAsync('/:episodeId', async (req, res) => {
     episode.views++;
     await episode.save();
 
+    if(req.user) {
+        await AnimeTracking.findOneAndUpdate({userId: req.user._id, animeId: req.anime._id}, {currentEpisode: episode.number}, {new: true});
+    }
     res.status(200).send(episode);
 });
 
 import commentsRouter from './comments.js';
+import AnimeTracking from '../../models/AnimeTracking.js';
 
 router.useAsync('/:episodeId/comments/', async (req, res, next) => {
     const episode = await Episode.findById(req.params.episodeId).populate({
