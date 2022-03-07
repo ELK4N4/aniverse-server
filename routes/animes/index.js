@@ -86,7 +86,6 @@ router.getAsync('/:animeId', async (req, res) => {
         animeWithRecommended.projects.unshift(recommended);
     }
 
-
     if(req.user) {
         const animeTracking = await AnimeTracking.findOne({userId: req.user._id, animeId: anime._id});
         animeWithRecommended.tracking = animeTracking;
