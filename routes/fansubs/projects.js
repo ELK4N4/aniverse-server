@@ -1,6 +1,8 @@
 import { Router } from '@awaitjs/express';
 import Project from '../../models/Project.js';
 import Anime from '../../models/Anime.js';
+import User from '../../models/User.js';
+import Notification from '../../models/Notification.js';
 
 const router = Router();
 
@@ -47,7 +49,20 @@ router.postAsync('/', hasFansubPermissions('projects'), async (req, res) => {
     });
 
     const savedProject = await project.save();
-    savedProject.anime = anime;
+    if(savedProject) {
+        savedProject.anime = anime;
+        const users = await User.find({followingFansubs: {$all: req.fansub._id} });
+        users.forEach(async (user) => {
+            const notification = new Notification({
+                message: `הפאנסאב ${req.fansub.name} מתחיל לתרגם את ${savedProject.anime.name.hebrew}!`,
+                link: `/animes/${savedProject.anime._id}/episodes?fansub=${req.fansub._id}`,
+                userId: user._id
+            });
+        
+            await notification.save();
+        })
+    }
+        
     res.status(201).json(savedProject);
 });
 

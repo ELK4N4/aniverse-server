@@ -4,7 +4,7 @@ import { hasFansubPermissions } from '../../middlewares/auth.js';
 import validate from '../../middlewares/validation.js';
 import Episode from '../../models/Episode.js';
 import Notification from '../../models/Notification.js';
-import User from '../../models/User.js';
+import AnimeTracking from '../../models/AnimeTracking.js';
 
 const router = Router();
 
@@ -43,16 +43,22 @@ router.postAsync('/', hasFansubPermissions('projects'), validate(schemes.episode
     });
 
     const savedEpisode = await episode.save();
-    const users = await User.find({followingFansubs: {$all: req.fansub._id} });
-    users.forEach(async (user) => {
-        const notification = new Notification({
-            message: `הפאנסאב ${req.fansub.name} הוסיף פרק ${savedEpisode.number} לאנימה ${req.project.anime.name.hebrew}`,
-            link: `/animes/${req.project.anime._id}/episodes?fansub=${req.fansub._id}&episode=${savedEpisode._id}`,
-            userId: user._id
-        });
+
+    if(savedEpisode) {
+        const trackings = await AnimeTracking.find({animeId: savedEpisode.anime._id, status: "בצפייה"});
+        trackings.forEach(async (tracking) => {
+            if(tracking.currentEpisode < savedEpisode.number) {
+                const notification = new Notification({
+                    message: `הפאנסאב ${req.fansub.name} תירגם את פרק ${savedEpisode.number} לאנימה ${req.project.anime.name.hebrew}!`,
+                    link: `/animes/${req.project.anime._id}/episodes?fansub=${req.fansub._id}&episode=${savedEpisode._id}`,
+                    userId: tracking.userId
+                });
+
+                await notification.save();
+            }
+        })
+    }
     
-        await notification.save();
-    })
     res.status(201).json(savedEpisode);
 });
 
