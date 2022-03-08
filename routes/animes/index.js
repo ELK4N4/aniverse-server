@@ -42,6 +42,7 @@ router.getAsync('/:animeId', async (req, res) => {
             path: 'episodes',
             model: 'Episode',
             select: 'number',
+            options: { sort: { 'number': 0 } }
         }]
     });
 

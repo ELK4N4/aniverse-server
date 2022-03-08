@@ -23,6 +23,7 @@ router.getAsync('/:projectId', async (req, res) => {
     const project = await Project.findById(req.params.projectId).populate({
         path: 'episodes',
         model: 'Episode',
+        options: { sort: { 'number': 0 } }
     });
     if(!project) {
         return res.status(400).send('Projects Not Exist');
