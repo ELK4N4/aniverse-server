@@ -75,6 +75,7 @@ animeSchema.method('getRating', async function (userId) {
 animeSchema.post('findOneAndDelete', async function(doc) {
     try {
         await Project.findOneAndDelete({anime: doc._id});
+        await mongoose.model('Rating').remove({animeId: doc._id});
     } catch(err) {
         console.log({err});
     }
