@@ -29,7 +29,15 @@ router.getAsync('/:episodeId', async (req, res) => {
     await episode.save();
 
     if(req.user) {
-        await AnimeTracking.findOneAndUpdate({userId: req.user._id, animeId: req.anime._id}, {currentEpisode: episode.number}, {new: true});
+        const animeTracking = await AnimeTracking.findOneAndUpdate({userId: req.user._id, animeId: req.anime._id}, {currentEpisode: episode.number}, {new: true});
+        if(!animeTracking) {
+            const tracking = new AnimeTracking({
+                userId: req.user._id,
+                animeId: req.anime._id,
+                currentEpisode: episode.number,
+            });
+            await tracking.save();  
+        }
     }
     res.status(200).send(episode);
 });
