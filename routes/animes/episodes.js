@@ -41,13 +41,22 @@ router.useAsync('/:episodeId/comments/', async (req, res, next) => {
     const episode = await Episode.findById(req.params.episodeId).populate({
         path: 'comments',
         model: 'EpisodeComment',
-        populate: { 
+        populate: [{ 
             path: 'addedByUser',
             model: 'User',
             select: 'username avatar',
-        }
-
+        },
+        {
+            path: 'replyTo',
+            model: 'EpisodeComment',
+            populate: { 
+                path: 'addedByUser',
+                model: 'User',
+                select: 'username avatar',
+            },
+        }]
     });
+
     if(!episode) {
         return res.status(400).json({error: 'Fansub Not Exist'});
     }
