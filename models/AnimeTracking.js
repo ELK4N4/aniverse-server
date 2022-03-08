@@ -11,6 +11,7 @@ const animeTrackingSchema = new mongoose.Schema({
     },
     status: {
         type: String,
+        default: "בצפייה",
     },
     currentEpisode: {
         type: Number,
