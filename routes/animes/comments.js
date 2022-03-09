@@ -75,11 +75,20 @@ router.postAsync('/reply/:commentId', usersOnly, validate(schemes.commentScheme)
 
 //UPDATE exist episode
 router.putAsync('/:commentId', usersOnly, validate(schemes.commentScheme), async (req, res) => {
-    const comment = await EpisodeComment.findByIdAndUpdate(req.params.commentId, {message: req.body.message}, {new: true}).populate({
+    const comment = await EpisodeComment.findByIdAndUpdate(req.params.commentId, {message: req.body.message}, {new: true}).populate([{ 
         path: 'addedByUser',
         model: 'User',
         select: 'username avatar',
-    });
+    },
+    {
+        path: 'replyTo',
+        model: 'EpisodeComment',
+        populate: { 
+            path: 'addedByUser',
+            model: 'User',
+            select: 'username avatar',
+        },
+    }]);
 
     if(!comment) {
         return res.status(404).send('comment not exists');
