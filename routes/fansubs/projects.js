@@ -69,7 +69,7 @@ router.postAsync('/', hasFansubPermissions('projects'), async (req, res) => {
 
 //DELETE project
 router.deleteAsync('/:projectId', hasFansubPermissions('projects'), async (req, res) => {
-    const deletedProject = await Project.findByIdAndRemove(req.params.projectId);
+    const deletedProject = await Project.findByIdAndDelete(req.params.projectId);
     if (deletedProject) {
         return res.status(203).send(deletedProject);
     }

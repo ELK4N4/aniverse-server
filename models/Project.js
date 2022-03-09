@@ -41,8 +41,10 @@ projectSchema.post('save', async function(_savedDoc) {
 projectSchema.post('findOneAndDelete', async function(doc) {
     try {
         await Anime.findByIdAndUpdate({_id: doc.anime}, { $pull: { projects: doc._id } });
-        await Episode.deleteMany({ project: doc._id });
         await Fansub.findByIdAndUpdate({_id: doc.fansub}, { $pull: { projects: doc._id } });
+        doc.episodes.forEach(async episode => {
+            await mongoose.model('Episode').findByIdAndDelete(episode);
+        })
     } catch(err) {
         console.log({err});
     }

@@ -57,6 +57,9 @@ episodeSchema.post('save', async function(_savedDoc) {
 episodeSchema.post('findOneAndDelete', async function(doc) {
     try {
         await Project.findByIdAndUpdate(doc.project, { $pull: { episodes: doc._id } });
+        doc.comments.forEach(async comment => {
+            await mongoose.model('EpisodeComment').findByIdAndDelete(comment);
+        })
     } catch(err) {
         console.log({err});
     }

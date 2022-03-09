@@ -77,7 +77,8 @@ animeSchema.post('findOneAndDelete', async function(doc) {
         doc.projects.forEach(async project => {
             await mongoose.model('Project').findByIdAndDelete(project);
         })
-        await mongoose.model('Rating').remove({animeId: doc._id});
+        await mongoose.model('Rating').deleteMany({animeId: doc._id});
+        await mongoose.model('AnimeTracking').deleteMany({animeId: doc._id});
     } catch(err) {
         console.log({err});
     }
