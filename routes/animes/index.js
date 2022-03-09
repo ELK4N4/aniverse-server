@@ -243,6 +243,7 @@ router.deleteAsync('/:animeId/rating/:ratingId', usersOnly, async (req, res) => 
 router.postAsync('/:animeId/tracking', usersOnly, validate(schemes.animeTrackingScheme), async (req, res) => {
     const animeId = req.params.animeId;
     const anime = await Anime.findById(animeId);
+    console.log(req.body)
 
     if(!anime){
         return res.status(404).send('Anime Not Found');
@@ -268,7 +269,6 @@ router.postAsync('/:animeId/tracking', usersOnly, validate(schemes.animeTracking
 //PUT animes tracking
 router.putAsync('/:animeId/tracking/:trackingId', usersOnly, validate(schemes.animeTrackingScheme), async (req, res) => {
     const animeId = req.params.animeId;
-    
     const anime = await Anime.findById(animeId);
 
     if(!anime){
