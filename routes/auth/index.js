@@ -11,7 +11,7 @@ import nodemailer from'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'SendinBlue',
     auth: {
         user: process.env.EMAIL_USERNAME,
         pass: process.env.EMAIL_PASSWORD
@@ -85,7 +85,7 @@ router.postAsync('/register',validate(schemes.registerScheme), async (req, res) 
     const token = jwt.sign({email: savedUser.email}, process.env.TOKEN_SECRET, {expiresIn: '1d'});
 
     const welcomeMail = {
-        from: '"Aniverse - NoReply"',
+        from: process.env.EMAIL_USERNAME,
         to: savedUser.email,
         subject: 'ברוכים הבאים לAniverse!',
         text: `שלום ${savedUser.username},
@@ -196,7 +196,7 @@ router.postAsync('/verify/resend', async (req, res) => {
     const token = jwt.sign({email: unverifiedUser.email}, process.env.TOKEN_SECRET, {expiresIn: '7d'});
 
     const welcomeMail = {
-        from: '"Aniverse - NoReply"',
+        from: process.env.EMAIL_USERNAME,
         to: unverifiedUser.email,
         subject: 'ברוכים הבאים לAniverse!',
         text: `שלום ${unverifiedUser.username},
