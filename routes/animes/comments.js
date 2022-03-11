@@ -39,14 +39,9 @@ router.postAsync('/', usersOnly, validate(schemes.commentScheme), async (req, re
 
 //POST reply to a comment
 router.postAsync('/reply/:commentId', usersOnly, validate(schemes.commentScheme), async (req, res) => {
+    const replyComment = req.episode.comments.find(comment => comment._id.equals(req.params.commentId))
 
-    // Check if there is a reply and if it on same episode
-    const replyComment = await EpisodeComment.findById(req.params.commentId).populate({
-        path: 'addedByUser',
-        model: 'User',
-        select: 'username avatar',
-    });
-    if(!replyComment || !req.episode.comments.filter(comment => comment._id == replyComment._id)) {
+    if(!replyComment) {
         return res.status(404).send('Comment not exists');
     }
     
@@ -73,8 +68,17 @@ router.postAsync('/reply/:commentId', usersOnly, validate(schemes.commentScheme)
     res.status(201).json(commentsFields);
 });
 
-//UPDATE exist episode
+//PUT exist comment
 router.putAsync('/:commentId', usersOnly, validate(schemes.commentScheme), async (req, res) => {
+    const oldComment = await EpisodeComment.findById(req.params.commentId);
+    if(!oldComment) {
+        return res.status(404).send('comment not exists');
+    }
+
+    if(!oldComment.addedByUser.equals(req.user._id)) {
+        return res.status(403).send('Unauthorized');
+    }
+
     const comment = await EpisodeComment.findByIdAndUpdate(req.params.commentId, {message: req.body.message}, {new: true}).populate([{ 
         path: 'addedByUser',
         model: 'User',
@@ -98,8 +102,8 @@ router.putAsync('/:commentId', usersOnly, validate(schemes.commentScheme), async
 });
 
 //DELETE exist episode
-router.deleteAsync('/:commentId', async (req, res) => {
-    const comment = await EpisodeComment.findOneAndDelete({_id: req.params.commentId});
+router.deleteAsync('/:commentId', usersOnly, async (req, res) => {
+    const comment = await EpisodeComment.findOneAndDelete({_id: req.params.commentId, addedByUser: req.user._id});
     if(!comment)
     {
         return res.status(404).send('comment not exists');
