@@ -62,7 +62,7 @@ router.postAsync('/', hasFansubPermissions('projects'), validate(schemes.episode
     res.status(201).json(savedEpisode);
 });
 
-//UPDATE exist animes
+//PUT exist episode
 router.putAsync('/:episodeId', hasFansubPermissions('projects'), validate(schemes.episodeScheme), async (req, res) => {
     const episodeId = req.params.episodeId;
     const oldEpisode = await Episode.findById(episodeId);
@@ -72,7 +72,7 @@ router.putAsync('/:episodeId', hasFansubPermissions('projects'), validate(scheme
     }
     
     const dupCheck = await Episode.findOne({number: req.body.number, project: req.project._id});
-    if(dupCheck) {
+    if(dupCheck && !dupCheck._id.equals(oldEpisode._id)) {
         return res.status(403).send('הפרק כבר קיים');
     }
 
