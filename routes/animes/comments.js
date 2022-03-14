@@ -8,8 +8,21 @@ const router = Router();
 
 //GET all comments of episodes
 router.getAsync('/', async (req, res) => {
-    const comments = req.episode.comments;
-
+    const comments = req.episodeJSON.comments;
+    for(let i=0; i < comments.length; i++) {
+        if(comments[i].replyTo) {
+            const replyTo = await EpisodeComment.findById(comments[i].replyTo).populate({ 
+                path: 'addedByUser',
+                model: 'User',
+                select: 'username avatar',
+            });
+            if(replyTo) {
+                comments[i].replyTo = replyTo;
+            } else {
+                comments[i].replyTo = "deleted";
+            }
+        }
+    }
     res.json(comments);
 });
 

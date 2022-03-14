@@ -1,4 +1,5 @@
 import Episode from '../../models/Episode.js';
+import EpisodeComment from '../../models/EpisodeComment.js';
 import { Router } from '@awaitjs/express';
 
 const router = Router();
@@ -38,25 +39,29 @@ router.useAsync('/:episodeId/comments/', async (req, res, next) => {
     const episode = await Episode.findById(req.params.episodeId).populate({
         path: 'comments',
         model: 'EpisodeComment',
-        populate: [{ 
+        populate: { 
             path: 'addedByUser',
             model: 'User',
             select: 'username avatar',
-        },
-        {
-            path: 'replyTo',
-            model: 'EpisodeComment',
-            populate: { 
-                path: 'addedByUser',
-                model: 'User',
-                select: 'username avatar',
-            },
-        }]
+        }
     });
 
     if(!episode) {
         return res.status(400).json({error: 'Fansub Not Exist'});
     }
+    req.episodeJSON = JSON.parse(JSON.stringify(episode));
+
+    for(let i=0; i < episode.comments.length; i++) {
+        if(episode.comments[i].replyTo) {
+            const replyTo = await EpisodeComment.findById(episode.comments[i].replyTo).populate({ 
+                path: 'addedByUser',
+                model: 'User',
+                select: 'username avatar',
+            });
+            episode.comments[i].replyTo = replyTo;
+        }
+    }
+
     req.episode = episode;
     next();
 }, commentsRouter);
