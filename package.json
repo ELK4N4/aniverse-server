@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/aniverse-corporation/anime-prime#readme",
   "dependencies": {
-    "@aniverse/utils": "^2.9.0",
+    "@aniverse/utils": "^3.0.0",
     "@awaitjs/express": "^0.8.0",
     "@sendgrid/mail": "^7.6.2",
     "ansi-regex": ">=5.0.1",
