@@ -18,6 +18,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+
 const router = Router();
 
 //Login
@@ -119,7 +120,7 @@ router.postAsync('/forgot-password', validate(schemes.forgotPasswordScheme), asy
     const token = jwt.sign({_id: user._id, email: user.email}, process.env.TOKEN_SECRET, {expiresIn: '1d'});
 
     const welcomeMail = {
-        from: '"Aniverse - NoReply"',
+        from: process.env.EMAIL_USERNAME,
         to: user.email,
         subject: 'איפוס סיסמא - Aniverse',
         text: `שלום ${user.username},
