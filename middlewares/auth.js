@@ -34,11 +34,12 @@ const hasPermissions = (...permissions) => (req, res, next) => {
 
 const hasFansubPermissions = (...permissions) => (req, res, next) => {
     const member = req.fansub.members.find(member => member.userId.equals(req.user._id));
-    if (permissions.every(permission => member.permissions.includes(permission)) || member.owner) {
+    if (member && (permissions.every(permission => member.permissions.includes(permission)) || member.userId.equals(req.fansub.owner))) {
         next();
-    } else if(hasPermissions('fansubs')) {
+    } else if(!req.fansub.confirmed && hasPermissions('fansubs')) {
         next();
     } else {
+        console.log(req.fansub)
         return res.status(401).send('Unauthorized');
     }
 };
