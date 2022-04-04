@@ -48,7 +48,7 @@ router.postAsync('/', hasFansubPermissions('members'), validate(schemes.username
 
 //UPDATE member
 router.putAsync('/:userId', hasFansubPermissions('members'), validate(schemes.roleAndPermissionsUpdateScheme), async (req, res) => {
-    if(req.fansub.owner.equals(req.params.userId)) {
+    if(req.fansub.owner.equals(req.params.userId) && !req.user._id.equals(req.params.userId)) {
         return res.status(401).send('Unauthorized');
     }
 
@@ -70,8 +70,17 @@ router.putAsync('/:userId', hasFansubPermissions('members'), validate(schemes.ro
     res.send(members[memberIndex]);
 });
 
-//DELETE member
-router.deleteAsync('/:userId', hasFansubPermissions('members'), async (req, res) => {
+//DELETE member (authorization checking inside instead of middleware...)
+router.deleteAsync('/:userId', async (req, res) => {
+    if(req.fansub.owner.equals(req.params.userId)) {
+        return res.status(401).send('Unauthorized');
+    }
+    
+    const member = req.fansub.members.find(member => member.userId.equals(req.user._id));
+    if (!(member && (member.permissions.includes('members') || member.userId.equals(req.fansub.owner) ||  member.userId.equals(req.fansub.owner)))) {
+        return res.status(401).send('Unauthorized');
+    }
+
     req.fansub.members = req.fansub.members.filter(member => !member.userId.equals(req.params.userId));
     await req.fansub.save();
 

@@ -39,7 +39,6 @@ const hasFansubPermissions = (...permissions) => (req, res, next) => {
     } else if(!req.fansub.confirmed && hasPermissions('fansubs')) {
         next();
     } else {
-        console.log(req.fansub)
         return res.status(401).send('Unauthorized');
     }
 };
