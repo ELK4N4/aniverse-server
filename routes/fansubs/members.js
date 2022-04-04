@@ -77,7 +77,7 @@ router.deleteAsync('/:userId', async (req, res) => {
     }
     
     const member = req.fansub.members.find(member => member.userId.equals(req.user._id));
-    if (!(member && (member.permissions.includes('members') || member.userId.equals(req.fansub.owner) ||  member.userId.equals(req.fansub.owner)))) {
+    if (!(member && (member.permissions.includes('members') || member.userId.equals(req.user._id) ||  member.userId.equals(req.fansub.owner)))) {
         return res.status(401).send('Unauthorized');
     }
 
