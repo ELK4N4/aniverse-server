@@ -36,6 +36,7 @@ router.getAsync('/:userId/tracking/animes/:status', async (req, res) => {
     for (let index = 0; index < animesWithRating.length; index++) {
         animesWithRating[index].animeId.rating = await animeTracking[index].animeId.getRating();
     }
+
     res.status(200).json(animesWithRating);
 });
 
