@@ -25,14 +25,14 @@ router.postAsync('/', async (req, res) => {
 router.deleteAsync('/', async (req, res) => {
     if(!req.user.followingFansubs.includes(req.fansub._id)){
         return res.status(401).send('You are not following');
+    } else {
+        let index = req.user.followingFansubs.indexOf(req.fansub._id);
+        req.user.followingFansubs.splice(index, 1);
+        await req.user.save();
+        
+        req.fansub.followers--;
+        await req.fansub.save();
     }
-
-    let index = req.user.followingFansubs.indexOf(req.fansub._id);
-    req.user.followingFansubs.splice(index, 1);
-    await req.user.save();
-    
-    req.fansub.followers--;
-    await req.fansub.save();
 
     res.status(203).send('Unfollowing successfully');
 });
