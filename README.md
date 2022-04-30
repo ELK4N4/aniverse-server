@@ -1,15 +1,13 @@
-# Welcome To AnimePrime Web Repo!
+# Welcome To Aniverse Server Repo!
 
-A website for AnimePrime - Social Community For Anime
+### **[Client Repo](https://github.com/ELK4N4/aniverse-client)**
+A website for Aniverse - Social Community For Anime
+
 
 ### Disclaimer
 All uses of this system are on the user, I developed this system for self learning.
 I don't support any abuse of the system, or using it for illegal purposes.
 
-### Design Pattern
-MVC
-
-![MVC Diagram](https://www.researchgate.net/publication/330140206/figure/fig8/AS:711336036151302@1546607135603/Model-View-ControlMVC-design-pattern.png)
 
 ## First Setup
 
@@ -35,25 +33,22 @@ MVC
 * Node.js
 * Express.js
 * MongoDB
-* Ejs
 
 ## NPM Scripts
 * "start": `node server.js`
-* "devStart": `nodemon server.js`
+* "dev": `nodemon server.js`
 
 ## Built With
-### FrontEnd
-* HTML
-* CSS
-* JavaScript
-* JQuery
+### Frontend
+* React
+* MUI
+* MobX
 
-### BackEnd
+### Backend
 * Node.js
 * Express.js
 * Mongoose.js
 * MongoDB
-* EJS
 
 ## Main Coder
 
